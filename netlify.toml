@@ -3,9 +3,3 @@
     to = "https://bejewelled-ganache-8d2d14.netlify.app/:splat"
     status = 200
     force = true
-
-[[redirects]]
-    from = "/blog/*"
-    to = "https://roaring-flan-f9eca9.netlify.app/:splat"
-    status = 200
-    force = true
