@@ -32,43 +32,42 @@ let url = articleUrl
 ---
 
 {
-	!type ||
-		(type === "article" && (
-			<section class={"content-card"}>
-				<header>
-					<h2>{post.title}</h2>
-				</header>
-				<article set:html={post.snippet} />
-				<footer>
-					<a href={`/wrote/${post.slug}`} class="card-button">
-						<span role="img" aria-label="Book icon">
-							{" "}
-							📖{" "}
-						</span>{" "}
-						Read Article
-					</a>
-					<p class="card-button card-info">
-						<span role="img" title="Date published" aria-label="Date published">
-							📆
-						</span>{" "}
-						{formatDate(post.date)}
-					</p>
-					<p class="card-divider">
-						<span>Categories</span>
-					</p>
-					<ul class="flat-list">
-						{post.categories.map((category: string) => (
-							<a
-								href={`/search/?query=&filter=${category}`}
-								class="card-button card-tag"
-							>
-								<li>{category}</li>
-							</a>
-						))}
-					</ul>
-				</footer>
-			</section>
-		))
+	(!type || type === "article") && (
+		<section class={"content-card"}>
+			<header>
+				<h2>{post.title}</h2>
+			</header>
+			<article set:html={post.snippet} />
+			<footer>
+				<a href={`/wrote/${post.slug}`} class="card-button">
+					<span role="img" aria-label="Book icon">
+						{" "}
+						📖{" "}
+					</span>{" "}
+					Read Article
+				</a>
+				<p class="card-button card-info">
+					<span role="img" title="Date published" aria-label="Date published">
+						📆
+					</span>{" "}
+					{formatDate(post.date)}
+				</p>
+				<p class="card-divider">
+					<span>Categories</span>
+				</p>
+				<ul class="flat-list">
+					{post.categories.map((category: string) => (
+						<a
+							href={`/search/?query=&filter=${category}`}
+							class="card-button card-tag"
+						>
+							<li>{category}</li>
+						</a>
+					))}
+				</ul>
+			</footer>
+		</section>
+	)
 }
 
 {
