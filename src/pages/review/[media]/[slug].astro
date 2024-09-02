@@ -18,7 +18,7 @@ export const getStaticPaths = (async () => {
 	});
 	const response = await reviews.json();
 
-	return response.data.map((item: any, index: number) => {
+	return response.data.map((item: any) => {
 		return {
 			params: {
 				media: item.type.slug,
