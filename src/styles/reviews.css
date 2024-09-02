@@ -1,0 +1,104 @@
+/* Header */
+.review-header > div {
+	max-width: var(--main);
+	padding-bottom: 1rem;
+}
+
+/* Series & Collections */
+
+.article .collections a,
+.article .collections a:visited {
+	display: inline-block;
+	padding: 0.5rem;
+	border: 2px solid var(--blue);
+	border-radius: 6px;
+	text-decoration: none;
+	line-height: 0.6;
+	color: var(--blue);
+}
+
+.collections a + a {
+	margin-left: 1rem;
+}
+
+.article .review-header p.collections a:hover,
+.article .review-header p.collections a:focus {
+	font-style: normal;
+	letter-spacing: normal;
+	color: #ffffff;
+	background-color: var(--blue);
+}
+
+/* Series Navigation */
+
+.series-nav {
+	width: var(--main);
+	max-width: calc(100% + 1rem);
+}
+
+nav.series-nav ul {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: baseline;
+	margin-left: -1rem;
+	margin-bottom: -0.5rem;
+}
+
+.series-nav ul li {
+	margin: 0;
+	margin-left: 1rem;
+	margin-bottom: 0.5rem;
+	padding: 0;
+}
+
+.series-nav li a {
+	display: inline-block;
+	padding: 0.5rem;
+	border: 2px solid var(--green);
+	border-radius: 6px;
+	text-decoration: none;
+	line-height: 0.6;
+	color: var(--green);
+}
+
+.article nav.series-nav ul li a:hover {
+	font-style: normal;
+	letter-spacing: normal;
+	background-color: var(--green);
+	color: #ffffff;
+}
+
+.series-nav a.active-series,
+.series-nav a.active-series:visited,
+.series-nav a.active-series:active {
+	background-color: var(--green);
+	color: #ffffff;
+}
+
+.series-nav ul:hover a.active-series {
+	background-color: #ffffff;
+	color: var(--green);
+}
+
+/* Homepage */
+
+/* Search */
+
+.search_control {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.search_control > ul {
+	margin-right: 2rem;
+}
+
+.search_control span.label {
+	margin-right: 0.5rem;
+	text-transform: uppercase;
+	font-size: 0.8rem;
+	font-weight: bold;
+	color: var(--orange);
+}
