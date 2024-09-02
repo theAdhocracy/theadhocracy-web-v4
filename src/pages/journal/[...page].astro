@@ -1,0 +1,97 @@
+---
+export const prerender = true;
+
+import Calendar from "@/components/Calendar.astro";
+import Card from "@/components/Card.astro";
+import Layout from "@/layouts/Layout.astro";
+import type { GetStaticPaths } from "astro";
+
+// Generate static pages
+export const getStaticPaths = (async ({ paginate }) => {
+	const data = await fetch("https://cms.theadhocracy.co.uk/journals.json", {
+		method: "GET",
+		headers: {
+			"content-type": "application/json",
+			Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
+		},
+	});
+	const response = await data.json();
+
+	return paginate(response.data, { pageSize: 1000 });
+}) satisfies GetStaticPaths;
+
+// Handle props
+const { page } = Astro.props;
+
+// Sort calendar by year and then by month
+const sortedCalendar: any = page.data.reduce((group: any, item: any) => {
+	if (!group.get(item.year)) {
+		group.set(item.year, new Map());
+	}
+
+	if (!group.get(item.year).get(item.month)) {
+		group.get(item.year).set(item.month, []);
+	}
+
+	group.get(item.year).get(item.month).push(item);
+
+	return group;
+}, new Map());
+---
+
+<Layout title="Journal">
+	<section id="content">
+		<header>
+			<h1>Journal Entries</h1>
+		</header>
+		<main class="content-grid">
+			{
+				[...sortedCalendar.keys()].map((year: any) => {
+					// Do not show the current year as a divider
+					const currentYear = new Date().getFullYear().toString();
+
+					const yearData = sortedCalendar.get(year);
+
+					return (
+						<>
+							{currentYear !== year && (
+								<div class="year-break">
+									<h3>{year}</h3>
+								</div>
+							)}
+							{[...yearData.keys()].map((month: any) => {
+								// Create array of journal entries for the current month + year
+								const entries = yearData.get(month).map((day: any) => {
+									return {
+										day: day.day,
+										slug: day.slug,
+									};
+								});
+
+								const monthData = yearData.get(month);
+
+								return (
+									<>
+										<div class="journal-section">
+											<h2>
+												{month} {year}
+											</h2>
+											<Calendar
+												month={month}
+												year={year}
+												entryArray={entries}
+											/>
+										</div>
+										{monthData.map((day: any) => {
+											return <Card post={day} type="journal" />;
+										})}
+									</>
+								);
+							})}
+						</>
+					);
+				})
+			}
+		</main>
+	</section>
+</Layout>

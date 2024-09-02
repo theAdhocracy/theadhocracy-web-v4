@@ -1,0 +1,557 @@
+---
+export const prerender = true;
+
+import type { GetStaticPaths } from "astro";
+
+import Layout from "@/layouts/Layout.astro";
+import Rating from "@/components/Rating.astro";
+import Review from "@/components/Review.astro";
+
+// Generate static pages
+export const getStaticPaths = (async () => {
+	const reviews = await fetch("https://cms.theadhocracy.co.uk/reviews.json", {
+		method: "GET",
+		headers: {
+			"content-type": "application/json",
+			Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
+		},
+	});
+	const response = await reviews.json();
+
+	return response.data.map((item: any, index: number) => {
+		return {
+			params: {
+				media: item.type.slug,
+				slug: item.slug,
+			},
+			props: {
+				review: item,
+			},
+		};
+	});
+}) satisfies GetStaticPaths;
+
+const { review } = Astro.props as any;
+
+const tldr = review.desc.replace(/^<p>/, "<p><strong>tl;dr: </strong>");
+---
+
+<Layout
+	title={review.title}
+	meta={{
+		desc: `${review.desc} Rated ${review.rating} out of 5.`,
+		type: "article",
+		category: review.type.title,
+		published: review.date,
+		updated: review.updated,
+	}}
+>
+	<main id="content" class="article h-entry">
+		<header class="review-header">
+			<h1 class="article-header p-name">{review.title}</h1>
+			<p>
+				<Rating value={review.rating} />
+				<em>
+					{" "}
+					based on {review.viewCount} review{review.viewCount > 1 ? "s" : ""}.
+				</em>
+			</p>
+			{review.author && <p>Written by {review.author}.</p>}
+			<div set:html={tldr} />
+			{
+				review.collections.length > 0 && (
+					<>
+						<h2>Collections</h2>
+						<p class="collections">
+							{review.collections.map((collection: any) => (
+								<a href={`/review/collection/${collection.slug}`}>
+									{collection.title}
+								</a>
+							))}
+						</p>
+					</>
+				)
+			}
+			{
+				review.series.length > 0 && (
+					<>
+						<h2>Series</h2>
+						<p class="collections">
+							{review.series.map((series: any) => (
+								<a href={`/review/series/${review.type.slug}/${series.slug}`}>
+									{series.title}
+								</a>
+							))}
+						</p>
+					</>
+				)
+			}
+		</header>
+		{
+			review.critiques.length > 1 && (
+				<nav class="series-nav">
+					<ul>
+						{review.critiques.map((critique: any) => {
+							const title = critique.title ? critique.title : "Title";
+							const urlHash = encodeURIComponent(
+								title.toLowerCase().replace(/\s/g, "-")
+							);
+							return (
+								<li>
+									<a href={`#${urlHash}`} data-id={urlHash}>
+										{title}
+									</a>
+								</li>
+							);
+						})}
+					</ul>
+				</nav>
+			)
+		}
+		{
+			review.critiques.map((critique: any) => (
+				<Review
+					review={critique}
+					slug={encodeURIComponent(
+						critique?.title?.toLowerCase().replace(/\s/g, "-")
+					)}
+				/>
+			))
+		}
+	</main>
+</Layout>
+
+<script>
+	const reviews = document.querySelectorAll("article.review");
+	const navOptions = document.querySelectorAll(".series-nav > ul > li > a");
+
+	// Add event handlers to navigation
+	if (navOptions.length > 0) {
+		navOptions.forEach((link) => {
+			link.addEventListener("click", (event: any) => {
+				event.preventDefault();
+				const slug = event.target.getAttribute("data-id");
+
+				// Update navigation state
+				activeSeries(slug);
+
+				// Update browser state
+				window.history.pushState(null, "", `#${slug}`);
+
+				// Load correct review(s)
+				activeReview(slug);
+			});
+		});
+	}
+
+	// Add/remove active class from reviews so only selected option is visible
+	function activeReview(slug: string) {
+		reviews.forEach((review) => {
+			if (slug && review.getAttribute("data-id") === slug.replace("#", "")) {
+				review.classList.remove("inactive-review");
+			} else {
+				review.classList.add("inactive-review");
+			}
+		});
+	}
+
+	// Add/remove active class from links to show which series is selected
+	function activeSeries(slug: string) {
+		navOptions.forEach((link) => {
+			if (slug && link.getAttribute("data-id") === slug.replace("#", "")) {
+				link.classList.add("active-series");
+			} else {
+				link.classList.remove("active-series");
+			}
+		});
+	}
+
+	// Handle initial state with a hash
+	const urlHash = window.location.hash;
+	if (urlHash) {
+		// Set the initial navigation state
+		activeSeries(urlHash);
+
+		// Set correct review to show
+		activeReview(urlHash);
+	} else {
+		// Default to first item
+		const firstReviewId = document
+			.querySelector("article.review")
+			?.getAttribute("data-id");
+
+		activeSeries(firstReviewId || "");
+		activeReview(firstReviewId || "");
+	}
+</script>
+
+<style is:global>
+	/* Determin Grid Widths */
+	:root {
+		--main: 40rem;
+		--aside: 20rem;
+		--gutter: 10rem;
+		--full-width: calc(var(--main) + (2 * var(--aside)) + (2 * var(--gutter)));
+		--part-span: calc(var(--main) + var(--aside));
+	}
+
+	/* Width / Column Utility Classes */
+
+	.full-width {
+		max-width: var(--full-width);
+		width: 100%;
+	}
+
+	.main-col {
+		max-width: var(--main);
+		width: 100%;
+	}
+
+	.right-side {
+		float: right;
+		max-width: var(--aside);
+		width: 100%;
+	}
+
+	.left-side {
+		float: left;
+		max-width: var(--aside);
+		width: 100%;
+	}
+
+	.part-span {
+		max-width: var(--part-span);
+		width: 100%;
+	}
+
+	/* Layout & Element Styling */
+
+	#article-body {
+		grid-column: 1 / -1;
+	}
+
+	main.article * {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.article p,
+	.article h2,
+	.article h3,
+	.article h4,
+	.article h5,
+	.article h6,
+	#article-body ul,
+	#article-body ol,
+	.footnotes ul,
+	.footnotes ol {
+		max-width: var(--main);
+		line-height: 2;
+	}
+
+	.article h2 {
+		background: linear-gradient(90deg, var(--blue), var(--lightblue));
+		-webkit-text-fill-color: transparent;
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: var(--blue); /* fallback if gradients aren't suppported */
+	}
+
+	.article h3 {
+		background: linear-gradient(90deg, var(--green), var(--lightblue));
+		-webkit-text-fill-color: transparent;
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: var(--green); /* fallback if gradients aren't suppported */
+	}
+
+	.article code {
+		padding: 0 0.2em;
+		font-size: 1.05em;
+		color: var(--orange);
+		font-weight: bold;
+	}
+
+	.article pre {
+		max-width: var(--part-span);
+		padding: 1rem 3rem;
+		overflow-x: auto;
+		background-color: var(--darkgrey);
+		border-left: 5px solid var(--orange);
+		border-image: linear-gradient(180deg, var(--orange), var(--yellow)) 1;
+		color: var(--yellow);
+		line-height: 2.2;
+		tab-size: 4;
+		white-space: pre;
+	}
+
+	.article kbd {
+		padding: 0.1em 0.3em 0;
+		border: 1px solid var(--grey);
+		border-radius: 6px;
+		color: var(--green);
+	}
+
+	.article blockquote {
+		position: relative;
+		max-width: var(--part-span);
+		padding: 2rem;
+		font-size: 1.5rem;
+		font-family: "Times New Roman", serif;
+		line-height: 2;
+		text-align: center;
+		font-style: italic;
+		quotes: "“" "”";
+	}
+
+	.article blockquote::before {
+		content: open-quote;
+		display: inline-block;
+		transform: translateY(0.25rem);
+		margin-right: 1.25rem;
+		margin-left: -3rem; /* allows position to spill into gap for article details */
+		font-size: 4rem;
+		color: var(--orange);
+		line-height: 0;
+	}
+
+	.article blockquote::after {
+		content: close-quote;
+		position: absolute;
+		bottom: -2rem;
+		right: 0;
+		margin-left: 1.25rem;
+		font-size: 4rem;
+		color: var(--lightblue);
+	}
+
+	.article figure {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: center;
+	}
+
+	.article figure img {
+		margin: 0 0 0 auto;
+	}
+
+	.article figure figcaption {
+		max-width: 20rem;
+		margin: 2rem auto 0 2rem;
+		padding-left: 1rem;
+		padding-bottom: 0.25rem;
+		border-left: 3px solid var(--lightblue);
+		font-size: 0.8rem;
+		color: var(--lightblue);
+	}
+
+	.article del,
+	.article del code {
+		color: var(--grey);
+	}
+
+	.article a {
+		color: var(--pink);
+		text-underline-offset: 0.1em;
+		text-decoration-thickness: 0.1em;
+	}
+
+	.article a:visited {
+		color: var(--green);
+	}
+
+	.article a:not(.footnote-return):hover {
+		font-style: italic;
+		letter-spacing: 0.01em;
+	}
+
+	.article sup {
+		scroll-margin-top: 3rem;
+	}
+
+	.article sup a:not(.footnote-return):hover {
+		font-style: normal;
+		color: var(--orange);
+	}
+
+	/* Article Details */
+
+	.article-details {
+		display: grid;
+		grid-template-columns: 1fr;
+		width: 100%;
+		max-width: 100%;
+		margin-top: 0;
+		padding-left: 0;
+		list-style: none;
+		position: relative;
+		z-index: 1; /* fixes overlap with blockquotes making links unclickable */
+	}
+
+	.article-details li {
+		width: 100%;
+		line-height: 2;
+		color: var(--yellow);
+	}
+
+	.article-details li:nth-of-type(even) {
+		color: var(--green);
+	}
+
+	.article-details li:nth-of-type(even) a {
+		display: inline-block;
+		margin-left: 0.25em;
+		color: var(--grey);
+		text-decoration: none;
+	}
+
+	/* Article Footnotes */
+
+	.footnotes {
+		counter-reset: footnote;
+	}
+
+	.footnotes > aside > *:first-child::before {
+		counter-increment: footnote;
+		content: "[" counter(footnote) "] ";
+	}
+
+	.footnote-return {
+		text-decoration: none;
+	}
+
+	/* Mobile Breakpoints */
+
+	@media screen and (min-width: 275px) {
+		.article-details {
+			grid-template-columns: minmax(5rem, 7rem) minmax(10rem, 1fr);
+		}
+	}
+
+	/* Desktop */
+
+	@media screen and (min-width: 599px) {
+		.article-details {
+			display: block;
+			max-width: var(--aside);
+			padding-left: 2.5rem;
+			text-align: right;
+		}
+
+		.article-details li {
+			width: auto;
+			margin-right: 3rem;
+		}
+	}
+
+	/* Header */
+	.review-header > div {
+		max-width: var(--main);
+		padding-bottom: 1rem;
+	}
+
+	/* Series & Collections */
+
+	.article .collections a,
+	.article .collections a:visited {
+		display: inline-block;
+		padding: 0.5rem;
+		border: 2px solid var(--blue);
+		border-radius: 6px;
+		text-decoration: none;
+		line-height: 0.6;
+		color: var(--blue);
+	}
+
+	.collections a + a {
+		margin-left: 1rem;
+	}
+
+	.article .review-header p.collections a:hover,
+	.article .review-header p.collections a:focus {
+		font-style: normal;
+		letter-spacing: normal;
+		color: #ffffff;
+		background-color: var(--blue);
+	}
+
+	/* Series Navigation */
+
+	.series-nav {
+		width: var(--main);
+		max-width: calc(100% + 1rem);
+	}
+
+	nav.series-nav ul {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		align-items: baseline;
+		margin-left: -1rem;
+		margin-bottom: -0.5rem;
+	}
+
+	.series-nav ul li {
+		margin: 0;
+		margin-left: 1rem;
+		margin-bottom: 0.5rem;
+		padding: 0;
+	}
+
+	.series-nav li a {
+		display: inline-block;
+		padding: 0.5rem;
+		border: 2px solid var(--green);
+		border-radius: 6px;
+		text-decoration: none;
+		line-height: 0.6;
+		color: var(--green);
+	}
+
+	.article nav.series-nav ul li a:hover {
+		font-style: normal;
+		letter-spacing: normal;
+		background-color: var(--green);
+		color: #ffffff;
+	}
+
+	.series-nav a.active-series,
+	.series-nav a.active-series:visited,
+	.series-nav a.active-series:active {
+		background-color: var(--green);
+		color: #ffffff;
+	}
+
+	.series-nav ul:hover a.active-series {
+		background-color: #ffffff;
+		color: var(--green);
+	}
+
+	/* Homepage */
+
+	/* Search */
+
+	.search_control {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+
+	.search_control > ul {
+		margin-right: 2rem;
+	}
+
+	.search_control span.label {
+		margin-right: 0.5rem;
+		text-transform: uppercase;
+		font-size: 0.8rem;
+		font-weight: bold;
+		color: var(--orange);
+	}
+
+	/* Review: Client Side */
+	.inactive-review {
+		display: none;
+	}
+</style>

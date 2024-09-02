@@ -1,0 +1,42 @@
+---
+export const prerender = true;
+
+import Card from "@/components/Card.astro";
+import PageNav from "@/components/PageNav.astro";
+import Layout from "@/layouts/Layout.astro";
+import type { GetStaticPaths } from "astro";
+
+// Generate static pages
+export const getStaticPaths = (async ({ paginate }) => {
+	const data = await fetch("https://cms.theadhocracy.co.uk/articles.json", {
+		method: "GET",
+		headers: {
+			"content-type": "application/json",
+			Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
+		},
+	});
+	const response = await data.json();
+
+	return paginate(response.data, { pageSize: 12 });
+}) satisfies GetStaticPaths;
+
+// Handle props
+const { page } = Astro.props;
+---
+
+<Layout title="Articles">
+	<section id="content">
+		<header>
+			<h1>Explore Articles</h1>
+		</header>
+		<main class="content-grid">
+			{page.data.map((article, index) => <Card post={article} key={index} />)}
+			<PageNav
+				currentPage={page.currentPage}
+				totalPages={page.lastPage}
+				pageRoot="/articles"
+				type="regular"
+			/>
+		</main>
+	</section>
+</Layout>

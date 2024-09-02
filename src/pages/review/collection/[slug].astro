@@ -1,0 +1,62 @@
+---
+export const prerender = true;
+
+import type { GetStaticPaths } from "astro";
+
+import Card from "@/components/Card.astro";
+import Layout from "@/layouts/Layout.astro";
+
+// Generate static pages
+export const getStaticPaths = (async () => {
+	const reviews = await fetch(
+		"https://cms.theadhocracy.co.uk/collections.json",
+		{
+			method: "GET",
+			headers: {
+				"content-type": "application/json",
+				Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
+			},
+		}
+	);
+	const response = await reviews.json();
+
+	return response.data.map((item: any, index: number) => {
+		return {
+			params: {
+				slug: item.slug,
+			},
+			props: {
+				collection: item,
+			},
+		};
+	});
+}) satisfies GetStaticPaths;
+
+const { collection } = Astro.props as any;
+
+// const collection = data.collections
+const reviews = collection.reviews.sort((a: any, b: any) =>
+	a.title.localeCompare(b.title)
+); // sorts collection alphabetically
+---
+
+<Layout title={collection.title} meta={{ desc: collection.desc }}>
+	<section id="content">
+		<header>
+			<h1>{collection.title}</h1>
+			<p set:html={collection.desc} />
+		</header>
+		<main class="content-grid">
+			{
+				reviews.map((review: any) => (
+					<Card
+						post={review}
+						type="review"
+						key={review.slug}
+						articleUrl={`/review/${review.type}/${review.slug}`}
+					/>
+				))
+			}
+		</main>
+	</section>
+</Layout>
