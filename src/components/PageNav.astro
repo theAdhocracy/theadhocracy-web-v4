@@ -1,0 +1,50 @@
+---
+const { currentPage, totalPages, pageRoot, type } = Astro.props;
+
+// Defining pagination values
+const isFirst = currentPage === 1;
+const isLast = currentPage === totalPages;
+const prevPage =
+	currentPage - 1 === 1
+		? pageRoot
+		: `${pageRoot}/${(currentPage - 1).toString()}`;
+const nextPage = `${pageRoot}/${(currentPage + 1).toString()}`;
+---
+
+{
+	type === "review" && (
+		<footer class="page-navigation">
+			{!isFirst ? (
+				<a href={`${pageRoot}/${(currentPage - 1).toString()}`} rel="prev">
+					← Previous Page
+				</a>
+			) : (
+				<a href={"/reviews/"} rel="prev">
+					← Reviews Hub
+				</a>
+			)}
+			{!isLast && (
+				<a href={nextPage} rel="next">
+					Next Page →
+				</a>
+			)}
+		</footer>
+	)
+}
+
+{
+	type === "regular" && (
+		<footer class="page-navigation">
+			{!isFirst && (
+				<a href={prevPage} rel="prev">
+					← Previous Page
+				</a>
+			)}
+			{!isLast && (
+				<a href={nextPage} rel="next">
+					Next Page →
+				</a>
+			)}
+		</footer>
+	)
+}

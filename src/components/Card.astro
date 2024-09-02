@@ -1,61 +1,262 @@
 ---
-interface Props {
-	title: string;
-	body: string;
-	href: string;
-}
+import { formatDate } from "@/utilities/dates";
+import Rating from "./Rating.astro";
 
-const { href, title, body } = Astro.props;
+const { post, type, articleUrl, search } = Astro.props;
+
+// Review categories (collections/series)
+let groups = post.series
+	? post.series
+			.map((series: any) => ({ ...series, url: `series\\${post.type}` }))
+			.concat(
+				post.collections.map((collection: any) => ({
+					...collection,
+					url: "collection",
+				}))
+			)
+	: post.collections
+		? post.collections.map((collection: any) => ({
+				...collection,
+				url: "collection",
+			}))
+		: [];
+
+// Normalise url
+let url = articleUrl
+	? articleUrl
+	: post.series && post.collections
+		? `/review/${post.type.slug}/${post.slug}`
+		: !post.series && post.collections
+			? `/review/series/${post.type.slug}/${post.slug}`
+			: `/review/collection/${post.slug}`;
 ---
 
-<li class="link-card">
-	<a href={href}>
-		<h2>
-			{title}
-			<span>&rarr;</span>
-		</h2>
-		<p>
-			{body}
-		</p>
-	</a>
-</li>
+{
+	!type ||
+		(type === "article" && (
+			<section class={"content-card"}>
+				<header>
+					<h2>{post.title}</h2>
+				</header>
+				<article set:html={post.snippet} />
+				<footer>
+					<a href={`/wrote/${post.slug}`} class="card-button">
+						<span role="img" aria-label="Book icon">
+							{" "}
+							📖{" "}
+						</span>{" "}
+						Read Article
+					</a>
+					<p class="card-button card-info">
+						<span role="img" title="Date published" aria-label="Date published">
+							📆
+						</span>{" "}
+						{formatDate(post.date)}
+					</p>
+					<p class="card-divider">
+						<span>Categories</span>
+					</p>
+					<ul class="flat-list">
+						{post.categories.map((category: string) => (
+							<a
+								href={`/search/?query=&filter=${category}`}
+								class="card-button card-tag"
+							>
+								<li>{category}</li>
+							</a>
+						))}
+					</ul>
+				</footer>
+			</section>
+		))
+}
+
+{
+	type === "journal" && (
+		<section class={"content-card"}>
+			<header>
+				<h2>{post.title}</h2>
+			</header>
+			<article set:html={post.snippet} />
+			<footer>
+				<a href={`/wrote/${post.slug}`} class="card-button">
+					<span role="img" aria-label="Book icon">
+						📖
+					</span>{" "}
+					Read Entry
+				</a>
+				<p class="card-button card-info">
+					<span role="img" title="Date published" aria-label="Date published">
+						📆
+					</span>{" "}
+					{formatDate(post.date)}
+				</p>
+			</footer>
+		</section>
+	)
+}
+
+{
+	type === "review" && (
+		<article class={"content-card"}>
+			<header>
+				{search ? (
+					<h2>
+						{/* TODO: Integrate search (this controls italics in search results) */}
+						{/* <Highlight attribute="node.title" hit={hit} /> */}
+					</h2>
+				) : (
+					<h2>{post.title}</h2>
+				)}
+			</header>
+			{search ? (
+				<p>
+					{/* TODO: Integrate search (this controls italics in search results) */}
+					{/* <Highlight attribute="node.sanitised" hit={hit} /> */}
+				</p>
+			) : (
+				<div set:html={post.desc} />
+			)}
+			<footer>
+				{post.rating ? (
+					<p class="card-button card-info">
+						<Rating value={post.rating} />
+					</p>
+				) : (
+					<div />
+				)}
+				<a href={url} class="card-button">
+					<span role="img" aria-label="Book icon">
+						📖
+					</span>{" "}
+					Read Entry
+				</a>
+				{groups.length > 0 && (
+					<>
+						<p class="card-divider">
+							<span>Series & Collections</span>
+						</p>
+						<ul class="flat-list">
+							{groups.map((group: any) => (
+								<a
+									href={`/review/${group.url}/${group.slug}`}
+									class="card-button card-tag"
+								>
+									<li>{group.title}</li>
+								</a>
+							))}
+						</ul>
+					</>
+				)}
+			</footer>
+		</article>
+	)
+}
+
 <style>
-	.link-card {
-		list-style: none;
+	.content-card {
 		display: flex;
-		padding: 1px;
-		background-color: #23262d;
-		background-image: none;
-		background-size: 400%;
-		border-radius: 7px;
-		background-position: 100%;
-		transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+		flex-direction: column;
+		border-bottom: 5px solid var(--lightblue);
+		border-image: linear-gradient(90deg, var(--lightblue), var(--blue)) 1;
 	}
-	.link-card > a {
-		width: 100%;
-		text-decoration: none;
-		line-height: 1.4;
-		padding: calc(1.5rem - 1px);
-		border-radius: 8px;
-		color: white;
-		background-color: #23262d;
-		opacity: 0.8;
-	}
-	h2 {
+
+	.content-card h2 {
 		margin: 0;
-		font-size: 1.25rem;
-		transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+		padding: 0.25rem 1rem 0.5rem 1rem;
+		background-image: linear-gradient(90deg, var(--blue), var(--lightblue));
+		color: white;
 	}
-	p {
-		margin-top: 0.5rem;
-		margin-bottom: 0;
+
+	.content-card article,
+	.content-card > p,
+	.content-card > div {
+		flex: 1;
+		margin: 1rem 0;
+		padding: 0 0.75rem;
 	}
-	.link-card:is(:hover, :focus-within) {
-		background-position: 0;
-		background-image: var(--accent-gradient);
+
+	.content-card footer {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0.5rem;
+		padding: 0 1rem 1rem 0.75rem;
+		justify-content: center;
+		align-items: center;
+		color: #ffffff;
 	}
-	.link-card:is(:hover, :focus-within) h2 {
-		color: rgb(var(--accent-light));
+
+	.content-card .card-divider {
+		grid-column: 1 / 3;
+		display: flex;
+		position: relative;
+		margin-top: 0;
+		margin-bottom: 0.1rem;
+		padding: 0.2rem 0 0 0;
+		background-color: transparent;
+		color: #000000;
+		justify-content: center;
+	}
+
+	.content-card .card-divider span {
+		position: relative;
+		z-index: 1;
+		padding: 0 1rem;
+		background-color: #ffffff;
+		color: var(--grey);
+		font-size: 0.75rem;
+		text-transform: uppercase;
+	}
+
+	.content-card .card-divider::before {
+		content: "";
+		display: block;
+		position: absolute;
+		top: calc(50% + 0.1rem);
+		z-index: 0;
+		width: 100%;
+		height: 3px;
+		background-color: var(--grey);
+	}
+
+	.content-card footer ul {
+		grid-column: 1 / 3;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.5rem;
+	}
+
+	.card-button {
+		flex: 1;
+		padding: 0.5rem;
+		background-color: var(--orange);
+		border-radius: 0.5rem;
+		line-height: 1.6;
+		text-align: center;
+		white-space: nowrap;
+		text-decoration: none;
+		color: #ffffff;
+	}
+
+	.card-button.card-tag {
+		margin: 0;
+		background-color: var(--blue);
+		line-height: 2;
+		font-size: 0.75rem;
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+
+	.card-tag:last-child:nth-child(odd) {
+		grid-column: 1 / -1;
+	}
+
+	.card-button.card-info {
+		margin: 0;
+		background-color: var(--lightblue);
+	}
+
+	.content-card a.card-button:hover {
+		background-color: var(--yellow);
 	}
 </style>

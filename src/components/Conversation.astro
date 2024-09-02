@@ -1,0 +1,284 @@
+---
+import FacePile from "./FacePile.astro";
+
+const { webmentions } = Astro.props;
+
+// Filter webmentions based on type (apart from self-links)
+const likes = webmentions.filter(
+	(mention: any) => mention.property === "like-of"
+);
+const replies = webmentions.filter(
+	(mention: any) => mention.property === "in-reply-to"
+);
+const bookmarks = webmentions.filter(
+	(mention: any) =>
+		mention.property === "bookmark-of" || mention.property === "repost-of"
+);
+const mentions = webmentions.filter(
+	(mention: any) =>
+		mention.property === "mention-of" &&
+		!mention.source.includes("theadhocracy.co.uk")
+);
+const comments = replies.concat(mentions);
+
+// Default image
+const defaultImageArray = [
+	"https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/theadhocracy-default-avatar-green.svg",
+	"https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/theadhocracy-default-avatar-pink.svg",
+	"https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/theadhocracy-default-avatar-blue.svg",
+	"https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/theadhocracy-default-avatar-orange.svg",
+];
+const randomImage = (array: any) => {
+	return array[Math.floor(Math.random() * array.length)];
+};
+---
+
+<section class="conversation">
+	<h2>Conversation</h2>
+	{
+		(likes.length > 0 || bookmarks.length > 0) && (
+			<section class="interactions">
+				{likes.length > 0 && (
+					<div>
+						<h3>Likes</h3>
+						<FacePile
+							pile={likes}
+							defaultFace={randomImage}
+							defaultImages={defaultImageArray}
+						/>
+					</div>
+				)}
+				{bookmarks.length > 0 && (
+					<div>
+						<h3>Bookmarks</h3>
+						<FacePile
+							pile={bookmarks}
+							defaultFace={randomImage}
+							defaultImages={defaultImageArray}
+						/>
+					</div>
+				)}
+			</section>
+		)
+	}
+	<h3>Want to take part?</h3>
+	<p>
+		Comments are powered by <a href="https://indieweb.org/Webmention"
+			>Webmentions</a
+		>; if you know what that means, do your thing 👍
+	</p>
+	{
+		comments.map((mention: any) => {
+			// Date and time
+			const pubDate = mention.published ? mention.published : mention.received;
+			const date = new Date(pubDate).toLocaleDateString("en-GB", {
+				day: "numeric",
+				month: "long",
+				year: "numeric",
+			});
+			const time = new Date(pubDate).toLocaleTimeString("en-GB", {
+				hour: "numeric",
+				minute: "numeric",
+			});
+
+			// Source
+			const website = mention.source.replace(
+				/^[https:]*\/\/([^/]*)\/.*/i,
+				"$1"
+			);
+
+			// Unique ID
+			const id = `comment_${mention.id.replace(/[a-z_]*/i, "")}`;
+
+			return (
+				<article id={id} class="h-entry p-comment h-cite">
+					<img
+						class="u-photo"
+						src={mention.author.photo || randomImage(defaultImageArray)}
+						alt=""
+					/>
+					<header class="p-author">
+						<h2 class="p-name">{mention.author.name || "Reply"}</h2>
+						<a class="u-url" href={mention.source}>
+							{website}
+						</a>
+					</header>
+					<section class="e-content">
+						{mention.content.html ? (
+							<div set:html={mention.content.html} />
+						) : (
+							<p>{mention.content.text}</p>
+						)}
+					</section>
+					<footer>
+						<p>
+							<span role="img" aria-label="Date posted">
+								📅
+							</span>
+						</p>
+						<p>
+							<time
+								class="dt-published"
+								datetime={pubDate}
+							>{`${date} ${time}`}</time>
+						</p>
+					</footer>
+				</article>
+			);
+		})
+	}
+</section>
+
+<style is:global>
+	.conversation {
+		max-width: var(--main);
+	}
+
+	.conversation > h2 {
+		margin-bottom: 0;
+	}
+
+	.conversation > h3 {
+		margin: 0 auto;
+	}
+
+	.conversation > p {
+		margin-top: 0;
+	}
+
+	.conversation article {
+		display: grid;
+		grid-template-columns: 1fr;
+		align-items: center;
+		text-align: left;
+		margin-bottom: 1.5rem;
+	}
+
+	.conversation article > img {
+		height: 4rem;
+		width: 4rem;
+		border-radius: 50%;
+		align-self: baseline;
+		margin-left: 0;
+		margin-top: 0.8rem;
+	}
+
+	.conversation article header {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		align-self: end;
+		width: 100%;
+		margin: 0;
+	}
+
+	.conversation article header h2 {
+		margin: 0;
+	}
+
+	.conversation article header a {
+		margin: 0 0 1rem;
+		font-size: 0.8rem;
+		text-decoration: none;
+	}
+
+	.conversation article > section {
+		width: 100%;
+		padding-bottom: 2rem;
+		border-bottom: 1px solid var(--lightblue);
+	}
+
+	.conversation article > section p {
+		margin-top: 0;
+	}
+
+	.conversation article footer {
+		display: flex;
+		font-size: 0.8rem;
+		color: var(--lightblue);
+		text-align: right;
+		align-self: end;
+		width: 100%;
+		margin-bottom: 1rem;
+	}
+
+	.conversation article footer p {
+		font-size: 0.8rem;
+		margin: 0;
+	}
+
+	/* Tablet Breakpoints */
+
+	@media screen and (min-width: 400px) {
+		.conversation .interactions {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 1rem;
+			place-content: start;
+			max-width: var(--main);
+		}
+
+		.conversation .interactions > * {
+			margin: 0;
+		}
+
+		.conversation .interactions h3 {
+			margin: 0;
+		}
+	}
+
+	/* Desktop Breakpoints */
+
+	@media screen and (min-width: 1425px) {
+		.conversation {
+			max-width: var(--part-span);
+		}
+
+		.conversation article {
+			grid-template-columns: minmax(4rem, 1fr) minmax(10rem, var(--main)) minmax(
+					3rem,
+					1fr
+				);
+		}
+
+		.conversation article > img {
+			grid-row: 1 / 3;
+			margin-right: 1rem;
+			margin-left: auto;
+		}
+
+		.conversation article header {
+			flex-direction: row;
+			align-items: center;
+		}
+
+		.conversation article header a {
+			margin: 0 1em -0.5rem;
+		}
+
+		.conversation article > section {
+			grid-column: 2 / 3;
+		}
+
+		.conversation article footer {
+			grid-column: 3 / 4;
+			flex-direction: column;
+		}
+	}
+
+	/* Final Breakpoints */
+
+	@media screen and (min-width: 1725px) {
+		.conversation article {
+			grid-template-columns:
+				minmax(5rem, var(--gutter)) minmax(10rem, var(--main))
+				minmax(3rem, 1fr);
+		}
+
+		.conversation article > img {
+			height: 5rem;
+			width: 5rem;
+			margin-right: auto;
+		}
+	}
+</style>
