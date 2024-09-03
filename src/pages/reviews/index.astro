@@ -251,7 +251,14 @@ if (Astro.request.method === "POST") {
 			<section class="content-grid">
 				{
 					searchData.map((result: any) => {
-						return <Card post={result} type="review" search={true} />;
+						return (
+							<Card
+								post={result}
+								type="review"
+								search={true}
+								articleUrl={`/review/${result.type}/${result.slug}`}
+							/>
+						);
 					})
 				}
 				{

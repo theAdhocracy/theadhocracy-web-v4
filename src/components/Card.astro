@@ -8,7 +8,7 @@ const { post, type, articleUrl, search, result } = Astro.props;
 // Review categories (collections/series)
 let groups = post?.series
 	? post.series
-			.map((series: any) => ({ ...series, url: `series\\${post.type}` }))
+			.map((series: any) => ({ ...series, url: `series\\${post.type.slug}` }))
 			.concat(
 				post.collections.map((collection: any) => ({
 					...collection,
@@ -65,7 +65,7 @@ const readType = result?.contentType?.substring(
 				<ul class="flat-list">
 					{post.categories.map((category: string) => (
 						<a
-							href={`/search/?query=&filter=${category}`}
+							href={`/search/?query=&filter=categories:${category.replaceAll(" ", "_").replaceAll("&", "_amp_")}&page=0`}
 							class="card-button card-tag"
 						>
 							<li>{category}</li>
@@ -197,7 +197,7 @@ const readType = result?.contentType?.substring(
 				<ul class="flat-list">
 					{result.categories.map((category: any) => (
 						<a
-							href={`/search/?query=&filter=${category}`}
+							href={`/search/?query=&filter=categories:${category.replaceAll(" ", "_").replaceAll("&", "_amp_")}&page=0`}
 							class="card-button card-tag"
 						>
 							<li>{category}</li>
