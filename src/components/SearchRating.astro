@@ -1,0 +1,103 @@
+---
+const { min = 1, max = 6 } = Astro.props;
+---
+
+<section>
+	<span class="label">Rating range:</span>
+	<span class="rating_menu">
+		{
+			new Array(6).fill(null).map((__, index) => {
+				let key = index + 1;
+				return (
+					<label for={`rating${key}`}>
+						<input
+							type="checkbox"
+							id={`rating${key}`}
+							name="rating"
+							value={key}
+							checked={key <= max && key >= min}
+							class:list={[
+								(index === min - 1 || index === max - 1) && "range_limit",
+							]}
+							aria-labelledby={`star_icon_${key}`}
+							data-rating="true"
+						/>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 512 512"
+							aria-labelledby={`star_icon_${key}`}
+							role="img"
+						>
+							<title id={`star_icon_${key}`}>Select {key} star reviews.</title>
+							<path
+								class="cls-1"
+								d="M510.37,183.83a21.33,21.33,0,0,0-19.71-13.17H334.79L276,13.84a21.33,21.33,0,0,0-39.95,0L177.21,170.66H21.33A21.33,21.33,0,0,0,6.25,207.08L125.71,326.54,86,485.48A21.34,21.34,0,0,0,119.07,508L256,410.21,392.93,508A21.34,21.34,0,0,0,426,485.48L386.29,326.54,505.75,207.08A21.33,21.33,0,0,0,510.37,183.83Z"
+							/>
+						</svg>
+					</label>
+				);
+			})
+		}
+	</span>
+	<input type="number" hidden name="min" value={min} />
+	<input type="number" hidden name="max" value={max} />
+</section>
+
+<script>
+	let min = 0;
+	let max = 6;
+
+	// Update user selected range and UI
+	function updateRange() {
+		// Retrieve checkbox elements
+		const checkboxes = document.querySelectorAll(
+			"input[type=checkbox][name='rating']"
+		);
+
+		// Create array of checked values & set bounds
+		const checkboxRange = Array.from(checkboxes)
+			.map((box: any) => (box.checked ? box.value : null))
+			.filter(Number);
+		const minBox = checkboxRange[0];
+		const maxBox = checkboxRange[checkboxRange.length - 1];
+
+		// Update visuals to match selected range (fills in blanks)
+		checkboxes.forEach((box: any) =>
+			maxBox >= box.value && box.value >= minBox
+				? (box.checked = true)
+				: (box.checked = false)
+		);
+		checkboxes.forEach((box) => box.classList.remove("range_limit"));
+
+		// Deal with 0 star selection; else update to range selected based on value array
+		if (!checkboxRange.length) {
+			min = 0;
+			max = 0;
+		} else {
+			// calculate min/max based on current search boundaries
+			max = parseInt(maxBox, 10);
+			min = parseInt(minBox, 10);
+
+			// set range limit UI
+			checkboxes[minBox - 1].classList.add("range_limit");
+			checkboxes[maxBox - 1].classList.add("range_limit");
+		}
+
+		// Update input values
+		(document.querySelector("input[name='min']") as HTMLInputElement).value =
+			min.toString();
+		(document.querySelector("input[name='max']") as HTMLInputElement).value =
+			max.toString();
+	}
+
+	// Attach to click events
+	const checkboxes = document.querySelectorAll(
+		"input[type=checkbox][name='rating']"
+	);
+
+	checkboxes.forEach((checkbox) =>
+		checkbox.addEventListener("click", () => {
+			updateRange();
+		})
+	);
+</script>

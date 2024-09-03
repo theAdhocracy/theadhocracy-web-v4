@@ -35,11 +35,7 @@ const response = await data.json();
 			<h1>What I'm Up To</h1>
 		</header>
 		<main class="content-grid">
-			{
-				response.data.map((post: any, index: number) => (
-					<Card key={index} post={post} />
-				))
-			}
+			{response.data.map((post: any) => <Card post={post} />)}
 			<a href="/articles/">Explore?</a>
 		</main>
 	</section>

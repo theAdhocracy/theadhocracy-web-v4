@@ -1,11 +1,12 @@
 ---
 import { formatDate } from "@/utilities/dates";
 import Rating from "./Rating.astro";
+import SearchHighlight from "./SearchHighlight.astro";
 
-const { post, type, articleUrl, search } = Astro.props;
+const { post, type, articleUrl, search, result } = Astro.props;
 
 // Review categories (collections/series)
-let groups = post.series
+let groups = post?.series
 	? post.series
 			.map((series: any) => ({ ...series, url: `series\\${post.type}` }))
 			.concat(
@@ -14,7 +15,7 @@ let groups = post.series
 					url: "collection",
 				}))
 			)
-	: post.collections
+	: post?.collections
 		? post.collections.map((collection: any) => ({
 				...collection,
 				url: "collection",
@@ -29,6 +30,12 @@ let url = articleUrl
 		: !post.series && post.collections
 			? `/review/series/${post.type.slug}/${post.slug}`
 			: `/review/collection/${post.slug}`;
+
+// Read type (search)
+const readType = result?.contentType?.substring(
+	0,
+	result.contentType.length - 1
+);
 ---
 
 {
@@ -101,8 +108,10 @@ let url = articleUrl
 			<header>
 				{search ? (
 					<h2>
-						{/* TODO: Integrate search (this controls italics in search results) */}
-						{/* <Highlight attribute="node.title" hit={hit} /> */}
+						<SearchHighlight
+							original={post.title}
+							matched={post._highlightResult.title}
+						/>
 					</h2>
 				) : (
 					<h2>{post.title}</h2>
@@ -110,8 +119,10 @@ let url = articleUrl
 			</header>
 			{search ? (
 				<p>
-					{/* TODO: Integrate search (this controls italics in search results) */}
-					{/* <Highlight attribute="node.sanitised" hit={hit} /> */}
+					<SearchHighlight
+						original={post.sanitised}
+						matched={post._highlightResult.sanitised}
+					/>
 				</p>
 			) : (
 				<div set:html={post.desc} />
@@ -147,6 +158,52 @@ let url = articleUrl
 						</ul>
 					</>
 				)}
+			</footer>
+		</article>
+	)
+}
+
+{
+	type === "search" && (
+		<article class="content-card">
+			<h2>
+				<SearchHighlight
+					original={result.title}
+					matched={result._highlightResult.title}
+				/>
+			</h2>
+			<p>
+				<SearchHighlight
+					original={result.sanitised}
+					matched={result._highlightResult.sanitised}
+				/>
+			</p>
+			<footer>
+				<a href={`/${url}/${result.slug}`} class="card-button">
+					<span role="img" aria-label="Book icon">
+						📖
+					</span>{" "}
+					Read {readType}
+				</a>
+				<p class="card-button card-info">
+					<span role="img" title="Date published" aria-label="Date published">
+						📆
+					</span>{" "}
+					{result.month.slice(0, 3)} {result.year}
+				</p>
+				<p class="card-divider">
+					<span>Categories</span>
+				</p>
+				<ul class="flat-list">
+					{result.categories.map((category: any) => (
+						<a
+							href={`/search/?query=&filter=${category}`}
+							class="card-button card-tag"
+						>
+							<li>{category}</li>
+						</a>
+					))}
+				</ul>
 			</footer>
 		</article>
 	)

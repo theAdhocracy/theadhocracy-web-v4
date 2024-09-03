@@ -1,0 +1,9 @@
+---
+const { original, matched } = Astro.props;
+
+const isMatched = matched.matchlevel !== "none";
+---
+
+{isMatched && <Fragment set:html={matched.value} />}
+
+{!isMatched && { original }}
