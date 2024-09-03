@@ -2,6 +2,8 @@ import netlify from "@astrojs/netlify";
 import node from "@astrojs/node";
 import { defineConfig } from "astro/config";
 
+import sitemap from "@astrojs/sitemap";
+
 let adapter = netlify();
 
 // Use node adapter when running local builds (cannot run Netlify locally)
@@ -19,4 +21,5 @@ export default defineConfig({
 	output: "server",
 	adapter: adapter,
 	site: "https://v4.theadhocracy.co.uk",
+	integrations: [sitemap()],
 });
