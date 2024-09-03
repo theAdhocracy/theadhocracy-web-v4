@@ -18,4 +18,5 @@ export default defineConfig({
 	},
 	output: "server",
 	adapter: adapter,
+	site: "https://v4.theadhocracy.co.uk",
 });
