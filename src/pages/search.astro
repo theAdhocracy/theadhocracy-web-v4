@@ -85,8 +85,9 @@ if (Astro.request.method === "POST") {
 		});
 
 		// Redirect with new search term
-		const queryString = `/search?query=${query}&filter=${filterValues.join(", ").replaceAll(" ", "_").replaceAll("&", "_amp_")}&page=${page}`;
-		return Astro.redirect(queryString);
+		return Astro.redirect(
+			`/search?query=${query}&filter=${filterValues.join(", ").replaceAll(" ", "_").replaceAll("&", "_amp_")}&page=${page}`
+		);
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error(error.message);

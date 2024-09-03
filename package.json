@@ -5,9 +5,10 @@
 	"scripts": {
 		"dev": "astro dev",
 		"start": "astro dev",
-		"build": "astro check && astro build",
+		"build": "astro check && npm run index && astro build",
 		"preview": "astro preview",
-		"astro": "astro"
+		"astro": "astro",
+		"index": "node src/utilities/algolia.js"
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.3",
