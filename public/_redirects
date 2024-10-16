@@ -1,5 +1,5 @@
 # Redirect default Netlify subdomain to primary domain
-https://an-adhoc-hope.netlify.com/* https://theadhocracy.co.uk/:splat 301!
+https://fervent-darwin-bec3e4.netlify.com/* https://theadhocracy.co.uk/:splat 301!
 
 # Redirect specific articles that have changed content type
 
@@ -14,6 +14,16 @@ https://an-adhoc-hope.netlify.com/* https://theadhocracy.co.uk/:splat 301!
 /article/thoughts-from-around-the-web /note/nine-design-tips-for-a-successful-company-logo 301
 /article/stickers-eclipses-and-lighthouses /note/google-lighthouse 301
 /article/spiders-dinosaurs-and-cvs-49 /note/lifemap 301
+
+## Note -> Article
+/notes/new-content-disabled-by-default-on-craft-cms /wrote/new-content-disabled-by-default-on-craft-cms 301
+/notes/code-institutes-5-day-coding-challenge-reviewed /wrote/code-institutes-5-day-coding-challenge-reviewed 301
+/notes/redactor-keyboard-shortcuts-for-craft-cms /wrote/redactor-keyboard-shortcuts-for-craft-cms 301
+/notes/gradient-borders-with-rounded-corners-on-input-fields /wrote/gradient-borders-with-rounded-corners-on-input-fields 301
+
+# Split/recombined articles
+/wrote/month-in-media-july-2017-41-part-two /wrote/month-in-media-july-2017 301
+/wrote/month-in-media-january-2017-5-part-two /wrote/month-in-media-january-2017 301
 
 # Redirect old content-specific URLs to new wrote/note structure
 /article/* /wrote/:splat 301
