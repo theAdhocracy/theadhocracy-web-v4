@@ -22,6 +22,7 @@ export default defineConfig({
 	adapter: adapter,
 	site: "https://v4.theadhocracy.co.uk",
 	integrations: [sitemap()],
+	trailingSlash: "never",
 	redirects: {
 		// Redirect specific articles that have changed content type
 		// Article -> Review

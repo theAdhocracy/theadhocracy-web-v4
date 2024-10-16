@@ -140,11 +140,12 @@ body {
 }
 
 body {
+	min-height: 100vh;
 	background-color: var(--lightgrey);
 	color: hsl(212, 20%, 20%);
 	display: grid;
 	grid-template-columns: repeat(10, 1fr);
-	grid-template-rows: auto minmax(auto, 3rem) auto auto minmax(
+	grid-template-rows: max-content minmax(auto, 3rem) max-content auto minmax(
 			100px,
 			max-content
 		);
