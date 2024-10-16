@@ -24,6 +24,8 @@ export default defineConfig({
 	integrations: [sitemap()],
 	trailingSlash: "never",
 	redirects: {
+		// NTS: Some redirects are also duplicated in the _redirects file. Netlify uses the latter, and overrides all of these, but for local testing these are required.
+
 		// Redirect specific articles that have changed content type
 		// Article -> Review
 		"/article/gretel-and-the-dark-spoilers": "/review/book/gretel-and-the-dark",
