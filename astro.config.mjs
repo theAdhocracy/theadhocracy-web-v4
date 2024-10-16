@@ -23,4 +23,7 @@ export default defineConfig({
 	site: "https://v4.theadhocracy.co.uk",
 	integrations: [sitemap()],
 	trailingSlash: "never",
+	build: {
+		format: "file",
+	},
 });
