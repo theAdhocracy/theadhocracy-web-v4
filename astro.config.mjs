@@ -20,7 +20,7 @@ export default defineConfig({
 	},
 	output: "server",
 	adapter: adapter,
-	site: "https://v4.theadhocracy.co.uk",
+	site: "https://theadhocracy.co.uk",
 	integrations: [sitemap()],
 	trailingSlash: "never",
 	build: {
