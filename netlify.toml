@@ -1,6 +1,0 @@
-
-[[redirects]]
-    from = "/journal/*"
-    to = "https://bejewelled-ganache-8d2d14.netlify.app/:splat"
-    status = 200
-    force = true
