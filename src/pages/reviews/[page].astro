@@ -26,11 +26,11 @@ const reviews = page.data;
 ---
 
 <Layout title="Reviews">
-	<section id="content">
+	<main id="content">
 		<header>
 			<h1>Explore Reviews</h1>
 		</header>
-		<main class="content-grid">
+		<section class="content-grid">
 			{
 				reviews.map((review, index) => (
 					<Card post={review} type="review" key={index} />
@@ -42,8 +42,8 @@ const reviews = page.data;
 				pageRoot="/reviews"
 				type="review"
 			/>
-		</main>
-	</section>
+		</section>
+	</main>
 </Layout>
 
 <style is:global>

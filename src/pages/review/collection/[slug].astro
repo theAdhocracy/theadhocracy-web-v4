@@ -39,12 +39,12 @@ const reviews = collection.reviews.sort((a: any, b: any) =>
 ---
 
 <Layout title={collection.title} meta={{ desc: collection.desc }}>
-	<section id="content">
+	<main id="content">
 		<header>
 			<h1>{collection.title}</h1>
 			<p set:html={collection.desc} />
 		</header>
-		<main class="content-grid">
+		<section class="content-grid">
 			{
 				reviews.map((review: any) => (
 					<Card
@@ -55,6 +55,6 @@ const reviews = collection.reviews.sort((a: any, b: any) =>
 					/>
 				))
 			}
-		</main>
-	</section>
+		</section>
+	</main>
 </Layout>

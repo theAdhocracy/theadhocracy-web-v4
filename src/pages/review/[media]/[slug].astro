@@ -59,7 +59,7 @@ const tldr = review.desc.replace(/^<p>/, "<p><strong>tl;dr: </strong>");
 			{
 				review.collections.length > 0 && (
 					<>
-						<h2>Collections</h2>
+						<h2 class="review-title">Collections</h2>
 						<p class="collections">
 							{review.collections.map((collection: any) => (
 								<a href={`/review/collection/${collection.slug}`}>
@@ -73,7 +73,7 @@ const tldr = review.desc.replace(/^<p>/, "<p><strong>tl;dr: </strong>");
 			{
 				review.series.length > 0 && (
 					<>
-						<h2>Series</h2>
+						<h2 class="review-title">Series</h2>
 						<p class="collections">
 							{review.series.map((series: any) => (
 								<a href={`/review/series/${review.type.slug}/${series.slug}`}>

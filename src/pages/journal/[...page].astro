@@ -38,11 +38,12 @@ const sortedCalendar: any = page.data.reduce((group: any, item: any) => {
 ---
 
 <Layout title="Journal">
-	<section id="content">
+	<main id="content">
 		<header>
 			<h1>Journal Entries</h1>
+			<h2 class="subtitle">{new Date().getFullYear().toString()}</h2>
 		</header>
-		<main class="content-grid">
+		<section class="content-grid">
 			{
 				[...sortedCalendar.keys()].map((year: any) => {
 					// Do not show the current year as a divider
@@ -54,7 +55,7 @@ const sortedCalendar: any = page.data.reduce((group: any, item: any) => {
 						<>
 							{currentYear !== year && (
 								<div class="year-break">
-									<h3>{year}</h3>
+									<h2>{year}</h2>
 								</div>
 							)}
 							{[...yearData.keys()].map((month: any) => {
@@ -71,9 +72,9 @@ const sortedCalendar: any = page.data.reduce((group: any, item: any) => {
 								return (
 									<>
 										<div class="journal-section">
-											<h2>
+											<h3>
 												{month} {year}
-											</h2>
+											</h3>
 											<Calendar
 												month={month}
 												year={year}
@@ -90,6 +91,6 @@ const sortedCalendar: any = page.data.reduce((group: any, item: any) => {
 					);
 				})
 			}
-		</main>
-	</section>
+		</section>
+	</main>
 </Layout>

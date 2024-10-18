@@ -23,11 +23,11 @@ const { page } = Astro.props;
 ---
 
 <Layout title="Articles">
-	<section id="content">
+	<main id="content">
 		<header>
 			<h1>Explore Articles</h1>
 		</header>
-		<main class="content-grid">
+		<section class="content-grid">
 			{page.data.map((article, index) => <Card post={article} key={index} />)}
 			<PageNav
 				currentPage={page.currentPage}
@@ -35,6 +35,6 @@ const { page } = Astro.props;
 				pageRoot="/articles"
 				type="regular"
 			/>
-		</main>
-	</section>
+		</section>
+	</main>
 </Layout>

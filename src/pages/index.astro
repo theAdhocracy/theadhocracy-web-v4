@@ -30,13 +30,13 @@ const response = await data.json();
 		</p>
 		<p class="p-note">Ad hoc thoughts from an ad hoc mind!</p>
 	</section>
-	<section id="content">
+	<main id="content">
 		<header>
-			<h1>What I'm Up To</h1>
+			<h2>What I'm Up To</h2>
 		</header>
-		<main class="content-grid">
+		<section class="content-grid">
 			{response.data.map((post: any) => <Card post={post} />)}
 			<a href="/articles/">Explore?</a>
-		</main>
-	</section>
+		</section>
+	</main>
 </Layout>
