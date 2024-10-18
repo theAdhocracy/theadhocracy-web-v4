@@ -17,7 +17,7 @@ theAdhocracy is built on the Jamstack, a modern tech stack wtih ReactJS at the h
 
 - [**Astro**](https://astro.build/)
 - [**Craft CMS**](https://craftcms.com/)
-- [**Netlify**](https://www.netlify.com/) [![Netlify Status](https://api.netlify.com/api/v1/badges/c49878f2-401f-4ffe-a02a-8adb4359c4f8/deploy-status)](https://app.netlify.com/sites/hilarious-flan-2f4dc8/deploys)
+- [**Netlify**](https://www.netlify.com/) [![Netlify Status](https://api.netlify.com/api/v1/badges/b6f7d1df-78b1-4885-807a-bf565946c866/deploy-status)](https://app.netlify.com/sites/an-adhoc-hope/deploys)
 - ![Gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square "Gitmoji")
 - ❤
 
@@ -34,3 +34,22 @@ You can find me all over the place:
 - **Mastodon**: [@theAdhocracy](https://indieweb.social/@theadhocracy)
 
 Or just subscribe to my blog via RSS to stay up to date 😀
+
+## 📋 Documentation
+
+### Prerequisites
+
+- npm
+- Prettier
+- Node
+
+### Local Production Build (Netlify)
+
+_The [Netlify CLI](https://docs.netlify.com/cli/local-development/) is required to perform local production builds._
+
+- `netlify dev --context production`: runs a local development server using the live server configuration.
+- `netlify build --context production`: forces a full build using the same settings as the production server. (Note: you cannot preview this build.)
+
+_The default behaviour assumes that `--content production` is set, so that can be omitted from both of the above commands without changing the output. Included purely for documentation purposes. Other options include e.g. `--content deploy-preview`._
+
+Full documentation: [Netlify CLI Docs](https://cli.netlify.com/commands/build/).
