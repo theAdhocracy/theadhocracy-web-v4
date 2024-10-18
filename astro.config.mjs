@@ -18,12 +18,12 @@ export default defineConfig({
 			transformer: "lightningcss",
 		},
 	},
-	output: "server",
+	output: "hybrid",
 	adapter: adapter,
 	site: "https://v4.theadhocracy.co.uk",
 	integrations: [sitemap()],
 	trailingSlash: "never",
 	build: {
-		format: "file",
+		format: "directory",
 	},
 });
