@@ -10,7 +10,7 @@ let dirFormat = "file";
 // Use node adapter when running local builds (cannot run Netlify locally)
 if (process.argv[3] === "--node" || process.argv[4] === "--node") {
 	adapter = node({ mode: "standalone" });
-	dirFormat = "directory" // controls trailing slashes via dir output
+	dirFormat = "directory"; // controls trailing slashes via dir output
 }
 
 // https://astro.build/config
@@ -22,7 +22,7 @@ export default defineConfig({
 	},
 	output: "hybrid",
 	adapter: adapter,
-	site: "https://v4.theadhocracy.co.uk",
+	site: "https://theadhocracy.co.uk",
 	integrations: [sitemap()],
 	trailingSlash: "never",
 	build: {
