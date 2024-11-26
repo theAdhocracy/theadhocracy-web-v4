@@ -211,11 +211,10 @@ const randomImage = (array: any) => {
 
 	@media screen and (min-width: 400px) {
 		.conversation .interactions {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
+			display: flex;
+			flex-wrap: wrap;
 			gap: 1rem;
 			place-content: start;
-			max-width: var(--main);
 		}
 
 		.conversation .interactions > * {
@@ -235,10 +234,7 @@ const randomImage = (array: any) => {
 		}
 
 		.conversation article {
-			grid-template-columns: minmax(4rem, 1fr) minmax(10rem, var(--main)) minmax(
-					3rem,
-					1fr
-				);
+			grid-template-columns: 5rem minmax(10rem, 1fr) 6rem;
 		}
 
 		.conversation article > img {

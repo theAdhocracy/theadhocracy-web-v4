@@ -57,7 +57,7 @@ p {
 	font-size: 1rem;
 }
 
-/* Improve readability - uses em to allow for variable font size */
+/* Improve readability */
 h1,
 h2,
 h3,
@@ -69,7 +69,7 @@ ul,
 ol,
 dl,
 address {
-	line-height: 1.5em;
+	line-height: 1.7;
 	word-break: break-word;
 }
 
@@ -88,6 +88,10 @@ nav ul {
 code,
 pre {
 	font-family: "Consolas", "Courier New", monospace;
+}
+
+dd {
+	margin: 0;
 }
 
 /* Multimedia */
@@ -219,7 +223,7 @@ body {
 	background-position: left center;
 	background-size: 400% auto;
 	font-size: 2rem;
- 	margin: .67em 0;
+	margin: 0.67em 0;
 	font-weight: bold;
 }
 
@@ -303,7 +307,8 @@ body {
 	flex-wrap: wrap;
 }
 
-#content h1, #content > header h2:not(.subtitle, .review-title) {
+#content h1,
+#content > header h2:not(.subtitle, .review-title) {
 	display: inline-block;
 	margin: 0 0 0.2rem 0;
 	background: linear-gradient(90deg, var(--orange), var(--yellow));
@@ -429,7 +434,7 @@ footer.page-navigation > a,
 
 #footer h2 {
 	font-size: 2rem;
-  	margin: .67em 0;
+	margin: 0.67em 0;
 	width: 100%;
 	text-align: center;
 }

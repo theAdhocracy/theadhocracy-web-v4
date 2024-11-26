@@ -5,10 +5,9 @@ const { pile, defaultFace, defaultImages } = Astro.props;
 <ul class="pile">
 	{
 		pile.map((face: any) => {
-			const handle = face.author.url.replace(/http.*twitter.com\//, "");
 			const type = face.property.toLowerCase().replace("-of", "");
 			const typed = `${type.replace(/e$/, "")}ed`;
-			const tooltip = `${face.author.name} (@${handle}) ${typed} on Twitter`;
+			const tooltip = `${face.author.name} ${typed} this post.`;
 			return (
 				<li class={`p-${type} h-cite`}>
 					<a
