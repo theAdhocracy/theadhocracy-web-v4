@@ -23,15 +23,15 @@ const { page } = Astro.props;
 
 // Sort calendar by year and then by month
 const sortedCalendar: any = page.data.reduce((group: any, item: any) => {
-	if (!group.get(item.year)) {
-		group.set(item.year, new Map());
+	if (!group.get(item.date.year)) {
+		group.set(item.date.year, new Map());
 	}
 
-	if (!group.get(item.year).get(item.month)) {
-		group.get(item.year).set(item.month, []);
+	if (!group.get(item.date.year).get(item.date.monthName)) {
+		group.get(item.date.year).set(item.date.monthName, []);
 	}
 
-	group.get(item.year).get(item.month).push(item);
+	group.get(item.date.year).get(item.date.monthName).push(item);
 
 	return group;
 }, new Map());
@@ -62,7 +62,7 @@ const sortedCalendar: any = page.data.reduce((group: any, item: any) => {
 								// Create array of journal entries for the current month + year
 								const entries = yearData.get(month).map((day: any) => {
 									return {
-										day: day.day,
+										day: day.date.day,
 										slug: day.slug,
 									};
 								});

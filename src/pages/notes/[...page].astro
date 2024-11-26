@@ -3,7 +3,6 @@ import type { GetStaticPaths } from "astro";
 
 import PageNav from "@/components/PageNav.astro";
 import Layout from "@/layouts/Layout.astro";
-import { formatDate } from "@/utilities/dates";
 
 // Generate static pages
 export const getStaticPaths = (async ({ paginate }) => {
@@ -55,7 +54,8 @@ const { page } = Astro.props;
 								>
 									📆
 								</span>{" "}
-								{formatDate(note.date)} &nbsp;|&nbsp;
+								<time datetime={note.date.html}>{note.date.date}</time>{" "}
+								&nbsp;|&nbsp;
 								<a href={`/note/${note.slug}`}>
 									<span
 										role="img"

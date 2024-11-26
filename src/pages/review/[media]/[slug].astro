@@ -40,8 +40,8 @@ const tldr = review.desc.replace(/^<p>/, "<p><strong>tl;dr: </strong>");
 		desc: `${review.desc} Rated ${review.rating} out of 5.`,
 		type: "article",
 		category: review.type.title,
-		published: review.date,
-		updated: review.updated,
+		published: review.date.date,
+		updated: review.updated.date,
 	}}
 >
 	<main id="content" class="article h-entry">

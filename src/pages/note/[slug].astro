@@ -6,8 +6,6 @@ import Discovery from "@/components/Discovery.astro";
 import RelatedContent from "@/components/RelatedContent.astro";
 import Layout from "@/layouts/Layout.astro";
 
-import { formatDate } from "@/utilities/dates";
-
 // Generate static pages
 export const getStaticPaths = (async () => {
 	const notes = await fetch("https://cms.theadhocracy.co.uk/notes.json", {
@@ -64,35 +62,36 @@ const wmData = await fetch(
 );
 const response = await wmData.json();
 
-const webmentions = (response.name = "Webmentions"
-	? response.children.map((mention: any) => {
-			return {
-				type: mention.type,
-				author: mention.author,
-				url: mention.url,
-				published: mention.published,
-				received: mention["wm-received"],
-				id: mention["wm-received"],
-				source: mention["wm-source"],
-				target: mention["wm-target"],
-				protocol: mention["wm-protocol"],
-				summary: {
-					type: mention.summary?.["content-type"],
-					value: mention.summary?.value,
-				},
-				content: mention.content,
-				bookmark: mention["bookmark-of"],
-				reply: mention["in-reply-to"],
-				like: mention["like-of"],
-				repost: mention["repost-of"],
-				mention: mention["mention-of"],
-				rsvp: mention.rsvp,
-				property: mention["wm-property"],
-				private: mention["wm-private"],
-				rels: mention.rels,
-			};
-		})
-	: []);
+const webmentions =
+	response.name == "Webmentions"
+		? response.children.map((mention: any) => {
+				return {
+					type: mention.type,
+					author: mention.author,
+					url: mention.url,
+					published: mention.published,
+					received: mention["wm-received"],
+					id: mention["wm-received"],
+					source: mention["wm-source"],
+					target: mention["wm-target"],
+					protocol: mention["wm-protocol"],
+					summary: {
+						type: mention.summary?.["content-type"],
+						value: mention.summary?.value,
+					},
+					content: mention.content,
+					bookmark: mention["bookmark-of"],
+					reply: mention["in-reply-to"],
+					like: mention["like-of"],
+					repost: mention["repost-of"],
+					mention: mention["mention-of"],
+					rsvp: mention.rsvp,
+					property: mention["wm-property"],
+					private: mention["wm-private"],
+					rels: mention.rels,
+				};
+			})
+		: [];
 ---
 
 <Layout
@@ -101,8 +100,8 @@ const webmentions = (response.name = "Webmentions"
 		desc: note.snippet,
 		type: "article",
 		category: note.silo,
-		published: note.date,
-		updated: note.updated,
+		published: note.date.date,
+		updated: note.updated.date,
 		tags: note.tags,
 	}}
 >
@@ -125,11 +124,8 @@ const webmentions = (response.name = "Webmentions"
 				</li>
 				<li>Published</li>
 				<li>
-					<time
-						class="dt-published"
-						datetime={new Date(note.date).toISOString()}
-					>
-						{formatDate(note.date)}
+					<time class="dt-published" datetime={note.date.html}>
+						{note.date.date}
 					</time>
 				</li>
 				<li>Categories</li>
@@ -179,11 +175,8 @@ const webmentions = (response.name = "Webmentions"
 				<ul>
 					<li class="p-summary">{note.snippet}</li>
 					<li>
-						<time
-							class="dt-updated"
-							datetime={new Date(note.updated).toISOString()}
-						>
-							{note.updated}
+						<time class="dt-updated" datetime={note.updated.html}>
+							{note.updated.date}
 						</time>
 					</li>
 					<li class="h-card">

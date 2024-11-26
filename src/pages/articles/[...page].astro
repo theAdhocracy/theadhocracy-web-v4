@@ -28,7 +28,7 @@ const { page } = Astro.props;
 			<h1>Explore Articles</h1>
 		</header>
 		<section class="content-grid">
-			{page.data.map((article, index) => <Card post={article} key={index} />)}
+			{page.data.map((article) => <Card post={article} />)}
 			<PageNav
 				currentPage={page.currentPage}
 				totalPages={page.lastPage}

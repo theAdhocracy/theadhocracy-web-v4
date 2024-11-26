@@ -1,5 +1,4 @@
 ---
-import { formatDate } from "@/utilities/dates";
 import Rating from "./Rating.astro";
 import SearchHighlight from "./SearchHighlight.astro";
 
@@ -57,7 +56,7 @@ const readType = result?.contentType?.substring(
 					<span role="img" title="Date published" aria-label="Date published">
 						📆
 					</span>{" "}
-					{formatDate(post.date)}
+					<time datetime={post.date.html}>{post.date.date}</time>
 				</p>
 				<p class="card-divider">
 					<span>Categories</span>
@@ -95,7 +94,7 @@ const readType = result?.contentType?.substring(
 					<span role="img" title="Date published" aria-label="Date published">
 						📆
 					</span>{" "}
-					{formatDate(post.date)}
+					<time datetime={post.date.html}>{post.date.date}</time>
 				</p>
 			</footer>
 		</section>
@@ -189,7 +188,7 @@ const readType = result?.contentType?.substring(
 					<span role="img" title="Date published" aria-label="Date published">
 						📆
 					</span>{" "}
-					{result.month.slice(0, 3)} {result.year}
+					{result.month.slice(0, 3)}&nbsp;{result.year}
 				</p>
 				<p class="card-divider">
 					<span>Categories</span>
