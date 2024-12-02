@@ -1,5 +1,7 @@
 ---
-const { min = 1, max = 6 } = Astro.props;
+const { min = "1.0", max = "6.0" } = Astro.props;
+
+// TODO: Fix issue where selecting a range, then deselecting, causes it to default to 0|0 rather than 0|6
 ---
 
 <section>
@@ -7,7 +9,10 @@ const { min = 1, max = 6 } = Astro.props;
 	<span class="rating_menu">
 		{
 			new Array(6).fill(null).map((__, index) => {
-				let key = index + 1;
+				const key = index + 1;
+				const numMin = Number(min);
+				const numMax = Number(max);
+
 				return (
 					<label for={`rating${key}`}>
 						<input
@@ -15,9 +20,9 @@ const { min = 1, max = 6 } = Astro.props;
 							id={`rating${key}`}
 							name="rating"
 							value={key}
-							checked={key <= max && key >= min}
+							checked={key <= numMax && key >= numMin}
 							class:list={[
-								(index === min - 1 || index === max - 1) && "range_limit",
+								(index === numMin - 1 || index === numMax - 1) && "range_limit",
 							]}
 							aria-labelledby={`star_icon_${key}`}
 							data-rating="true"
@@ -39,8 +44,8 @@ const { min = 1, max = 6 } = Astro.props;
 			})
 		}
 	</span>
-	<input type="number" hidden name="min" value={min} />
-	<input type="number" hidden name="max" value={max} />
+	<input type="number" hidden name="min" step="0.1" value={min} />
+	<input type="number" hidden name="max" step="0.1" value={max} />
 </section>
 
 <script>
@@ -85,9 +90,9 @@ const { min = 1, max = 6 } = Astro.props;
 
 		// Update input values
 		(document.querySelector("input[name='min']") as HTMLInputElement).value =
-			min.toString();
+			min.toString() + ".0";
 		(document.querySelector("input[name='max']") as HTMLInputElement).value =
-			max.toString();
+			max.toString() + ".0";
 	}
 
 	// Attach to click events
@@ -101,3 +106,63 @@ const { min = 1, max = 6 } = Astro.props;
 		})
 	);
 </script>
+
+<style>
+	:root {
+		--font-serif: "Sitka Text", Charter, "Bitstream Charter", Cambria, serif;
+		--font-sans: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+			"Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+	}
+
+	.label {
+		margin-block-end: 0.4rem;
+		font-family: var(--font-serif);
+		font-size: 0.8rem;
+		font-weight: bold;
+	}
+
+	.rating_menu label {
+		position: relative;
+		width: 1.4rem;
+		padding: 0.2rem;
+		border-radius: 6px;
+		display: inline-block;
+		height: 1.5rem;
+		font-size: 0.8rem;
+		line-height: 0;
+		color: #ffffff;
+	}
+
+	.rating_menu label input[type="checkbox"] {
+		position: absolute;
+		left: 0;
+		top: 0;
+		opacity: 0;
+	}
+
+	.rating_menu svg {
+		max-width: 1rem;
+		fill: #c4c4c4;
+	}
+
+	.rating_menu label:hover svg,
+	.rating_menu input:checked + svg {
+		fill: var(--orange);
+		opacity: 0.5;
+	}
+
+	.rating_menu input:checked + svg {
+		cursor: not-allowed;
+	}
+
+	.rating_menu input.range_limit,
+	.rating_menu input.range_limit + svg {
+		cursor: pointer;
+		opacity: 1;
+	}
+
+	.rating_menu input:not(:checked),
+	.rating_menu input:not(:checked) + svg {
+		cursor: pointer;
+	}
+</style>

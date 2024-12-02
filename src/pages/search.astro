@@ -90,7 +90,7 @@ if (Astro.request.method === "POST") {
 	}
 }
 
-// #6 Add whimsy
+// Add whimsy
 const powerSources = [
 	"the Wee Free Men",
 	"unicorns snorting pixie sticks",
@@ -112,7 +112,7 @@ const powerSources = [
 	<main id="content">
 		<h1 id="search-title">Search</h1>
 		<search role="search">
-			<form class="search_box search-form" method="post">
+			<form class="search-form" method="post">
 				<input
 					type="search"
 					name="search"
@@ -541,8 +541,10 @@ const powerSources = [
 				place-self: center;
 
 				li {
+					--currentBGColor: var(--yellow);
+
 					padding-inline: 0.2rem;
-					background-color: var(--yellow);
+					background-color: var(--currentBGColor);
 
 					a {
 						color: black;
@@ -550,15 +552,19 @@ const powerSources = [
 					}
 
 					&:has(a:hover, a:focus) {
-						background-color: color-mix(in srgb, var(--yellow), white 50%);
+						background-color: color-mix(
+							in srgb,
+							var(--currentBGColor),
+							white 50%
+						);
 					}
 				}
 
 				.silo {
-					background-color: var(--green);
+					--currentBGColor: var(--green);
 
 					& ~ li {
-						background-color: color-mix(in srgb, var(--green), white 50%);
+						--currentBGColor: color-mix(in srgb, var(--green), white 50%);
 					}
 				}
 			}

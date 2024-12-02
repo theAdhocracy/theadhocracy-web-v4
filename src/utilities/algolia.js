@@ -1,6 +1,8 @@
 import * as dotenv from "dotenv";
 import { algoliasearch } from "algoliasearch";
 
+// TODO: Remove this file and all associated dependencies
+
 // Enable env vars
 dotenv.config();
 
