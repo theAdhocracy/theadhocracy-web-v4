@@ -31,7 +31,7 @@ export const getStaticPaths = (async () => {
 
 const { review } = Astro.props as any;
 
-const tldr = review.desc.replace(/^<p>/, "<p><strong>tl;dr: </strong>");
+const tldr = review.desc?.replace(/^<p>/, "<p><strong>tl;dr: </strong>");
 ---
 
 <Layout

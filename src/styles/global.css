@@ -9,7 +9,7 @@
 
 	--grey: #d8d8d8;
 	--darkgrey: #1d2a34;
-	--lightgrey: #f8f8f8;
+	--lightgrey: #f6f6f6;
 }
 
 /* Motion Sensitive */
@@ -558,6 +558,6 @@ footer.page-navigation > a,
 	}
 
 	.content-grid {
-		grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
 	}
 }

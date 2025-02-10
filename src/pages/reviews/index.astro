@@ -43,19 +43,12 @@ const reviews = reviewsResponse.data.slice(0, 6);
 
 const series = seriesResponse.data
 	.sort((a: any, b: any) => {
-		// Gets the most recently updated review for each series, and sorts in descending order (so most recent review first)
-		const aUpdated = a.reviews?.reduce((prev: any, current: any) => {
-			return prev && prev.updated > current.updated ? prev : current;
-		}, null);
-
-		const bUpdated = b.reviews?.reduce((prev: any, current: any) => {
-			return prev && prev.updated > current.updated ? prev : current;
-		}, null);
-
-		return Date.parse(bUpdated?.updated) - Date.parse(aUpdated?.updated);
+		// Compare and return whichever is more recent
+		return Date.parse(b?.updated) - Date.parse(a?.updated);
 	})
 	.slice(0, 6);
 
+// TODO: see if this can be simplified like the series sort
 const collections = collectionResponse.data
 	.sort((a: any, b: any) => {
 		// Gets the most recently updated review for each series, and sorts in descending order (so most recent review first)
@@ -647,7 +640,7 @@ if (Astro.request.method === "POST") {
 				}
 
 				a {
-					color: #e3013d;
+					color: #e0043f;
 					text-decoration-style: double;
 					text-underline-offset: 0.1em;
 					text-decoration-thickness: 0.1em;
