@@ -21,7 +21,7 @@ theAdhocracy is built on the Jamstack, a modern tech stack wtih ReactJS at the h
 - ![Gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square "Gitmoji")
 - ❤
 
-It's also built on the foundations of the [IndieWeb](https://indieweb.org/), with accessibility (#a11y) at its core. If you can spot any improvements than can be made feel free to ping me a message (Twitter is probably best) or make a pull request.
+It's also built on the foundations of the [IndieWeb](https://indieweb.org/), with accessibility (#a11y) at its core. If you can spot any improvements than can be made feel free to ping me a message (BlueSky or Mastodon is probably best) or make a pull request.
 
 ## ℹ More about me
 
