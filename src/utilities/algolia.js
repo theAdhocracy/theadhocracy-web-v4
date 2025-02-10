@@ -58,7 +58,7 @@ const reviews = reviewResponse.data.map((review) => {
 		slug: review.slug,
 		rating: review.rating,
 		type: review.type.slug,
-		sanitised: review.desc.replace(/<[^>]*>?/gm, "").replace(/&nbsp;/g, " "),
+		sanitised: review.desc?.replace(/<[^>]*>?/gm, "").replace(/&nbsp;/g, " "),
 		date: review.date,
 		updated: review.updated,
 		latestReview: review.latestDate,
