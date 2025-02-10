@@ -17,8 +17,8 @@ export async function GET(context) {
 		trailingSlash: false,
 		items: response.data.slice(0, 12).map((post) => ({
 			title: post.title,
-			pubDate: post.updated,
-			description: post.desc,
+			pubDate: post.updated.datetime,
+			description: post.desc ? post.desc : "",
 			link: `/review/${post.type.slug}/${post.slug}`,
 		})),
 		customData: `<language>en-gb</language>`,

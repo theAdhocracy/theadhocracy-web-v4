@@ -17,7 +17,7 @@ export async function GET(context) {
 		trailingSlash: false,
 		items: response.data.slice(0, 12).map((post) => ({
 			title: post.title,
-			pubDate: post.date,
+			pubDate: post.date.datetime,
 			description: post.snippet,
 			link: `/${post.type === "articles" ? "wrote" : "note"}/${post.slug}`,
 		})),
