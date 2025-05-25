@@ -1,0 +1,38 @@
+RewriteEngine On
+
+# Redirect journal to subdirectory
+RewriteRule ^journal/(.*)$ /astro-test/$1 [L,R=200,QSA]
+
+# Redirect specific articles that have changed content type
+
+## Article -> Review
+Redirect 301 /article/gretel-and-the-dark-spoilers /review/book/gretel-and-the-dark
+Redirect 301 /article/deadpool-kills-the-marvel-universe /review/book/deadpool-kills-the-marvel-universe
+Redirect 301 /article/size-doesnt-matter-antman-spoilers /review/film/antman
+Redirect 301 /article/agents-of-s-h-i-e-l-d-spoilers /review/tv/agents-of-shield
+Redirect 301 /article/the-night-manager /review/tv/the-night-manager
+
+## Article -> Note
+Redirect 301 /article/thoughts-from-around-the-web /note/nine-design-tips-for-a-successful-company-logo
+Redirect 301 /article/stickers-eclipses-and-lighthouses /note/google-lighthouse
+Redirect 301 /article/spiders-dinosaurs-and-cvs-49 /note/lifemap
+
+## Note -> Article
+Redirect 301 /notes/new-content-disabled-by-default-on-craft-cms /wrote/new-content-disabled-by-default-on-craft-cms
+Redirect 301 /notes/code-institutes-5-day-coding-challenge-reviewed /wrote/code-institutes-5-day-coding-challenge-reviewed
+Redirect 301 /notes/redactor-keyboard-shortcuts-for-craft-cms /wrote/redactor-keyboard-shortcuts-for-craft-cms
+Redirect 301 /notes/gradient-borders-with-rounded-corners-on-input-fields /wrote/gradient-borders-with-rounded-corners-on-input-fields
+
+# Changed slug
+Redirect 301 /wrote/an-alpha-arrival /wrote/an-alpha-arrives
+
+# Split/recombined articles
+Redirect 301 /wrote/month-in-media-july-2017-41-part-two /wrote/month-in-media-july-2017
+Redirect 301 /wrote/month-in-media-january-2017-5-part-two /wrote/month-in-media-january-2017
+
+# Redirect old content-specific URLs to new wrote/note structure
+RewriteRule ^article/(.*)$ /wrote/$1 [R=301,L]
+RewriteRule ^journal/2020/([0-9]{2})/(.*)$ /wrote/$2 [R=301,L]
+
+# Redirect original WordPress URL structure
+RewriteRule ^(201[5-8])/([0-9]{2})/([0-9]{2})/(.*)$ /wrote/$4 [R=301,L]
