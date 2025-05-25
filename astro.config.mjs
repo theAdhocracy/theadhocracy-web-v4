@@ -12,7 +12,7 @@ export default defineConfig({
 	},
 	output: "hybrid",
 	adapter: node({ mode: "standalone" }),
-	site: "https://v4.theadhocracy.co.uk",
+	site: "https://theadhocracy.co.uk",
 	integrations: [sitemap()],
 	trailingSlash: "never",
 	build: {
