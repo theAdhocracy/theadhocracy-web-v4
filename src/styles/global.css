@@ -128,6 +128,12 @@ img {
 	margin-left: 1rem;
 }
 
+ul[role="list"] {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
 html {
 	scroll-behavior: smooth;
 }
@@ -412,64 +418,59 @@ footer.page-navigation > a,
 
 #footer {
 	grid-area: footer;
-	display: flex;
-	flex-wrap: wrap;
 	padding: 2rem 2rem 1rem;
 	background-color: var(--darkgrey);
 	color: var(--pink);
-}
 
-#footer section {
-	flex: 1;
-	flex-basis: 100%;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	align-items: flex-end;
-	background: linear-gradient(90deg, var(--orange), var(--pink));
-	-webkit-text-fill-color: transparent;
-	-webkit-background-clip: text;
-	background-clip: text;
-}
+	& > div {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		gap: 2rem;
+		width: 100%;
+		max-width: 65rem;
+		margin-inline: auto;
+	}
 
-#footer h2 {
-	font-size: 2rem;
-	margin: 0.67em 0;
-	width: 100%;
-	text-align: center;
-}
+	section {
+		max-width: 82rem;
+		background: linear-gradient(90deg, var(--orange), var(--pink));
+		-webkit-text-fill-color: transparent;
+		-webkit-background-clip: text;
+		background-clip: text;
+	}
 
-#footer p {
-	min-width: 8rem;
-	text-align: center;
-}
+	section:last-of-type {
+		grid-column: 1 / -1;
+	}
 
-#footer a {
-	color: var(--grey);
-	text-decoration: none;
-}
+	h2 {
+		font-size: 1.5rem;
+		margin: 0.5em 0;
+		width: 100%;
+	}
 
-#footer img {
-	height: 50px;
-	margin: 1rem auto;
-}
+	a {
+		color: var(--grey);
+		text-decoration-thickness: 2px;
+		text-decoration-color: var(--orange);
+		text-underline-offset: 0.2rem;
+	}
 
-#footer img.wide-logo {
-	height: 40px;
-	margin: 1.4rem auto 1rem;
-}
+	li + li {
+		margin-block-start: 0.25rem;
+	}
 
-.copyright {
-	width: 100%;
-	margin-bottom: 0;
-	text-align: center;
-	font-size: 1.2rem;
-	color: var(--grey);
-}
+	p + p {
+		margin-block-start: 0em;
+	}
 
-.copyright span {
-	padding-left: 1rem;
-	font-size: 1.3rem;
+	p:has(+ p) {
+		margin-block-end: 0.3em;
+	}
+
+	svg {
+		margin-inline-end: 0.2rem;
+	}
 }
 
 /* Index Content Grid */
@@ -549,12 +550,10 @@ footer.page-navigation > a,
 
 	#footer {
 		padding: 2rem 4rem 1rem;
-	}
 
-	#footer section {
-		flex-basis: 0%;
-		min-width: 299px;
-		margin-right: 2rem;
+		& > div {
+			gap: 2rem 5rem;
+		}
 	}
 
 	.content-grid {

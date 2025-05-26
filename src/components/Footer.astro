@@ -7,134 +7,190 @@ const { version } = metadata;
 const today = new Date();
 const yearAD = today.getFullYear();
 const yearHE = (yearAD + 10000).toString().replace(/^([0-9][0-9])/, "$1,");
+
+// Sections
+const madeWith = [
+	{
+		icon: "🛠️",
+		name: "Craft",
+		url: "https://craftcms.com/",
+		logo: "https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/craft-logo.svg",
+	},
+	{
+		icon: "🚀",
+		name: "Astro",
+		url: "https://astro.build/",
+		logo: "https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/gatsby-logo.svg",
+	},
+	{
+		icon: "🐙",
+		name: "GitHub",
+		url: "https://github.com/theAdhocracy",
+		logo: "https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/github-logo.svg",
+	},
+	{
+		icon: "💎",
+		name: "Krystal",
+		url: "https://krystal.io/",
+		logo: "https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/netlify-logo.svg",
+	},
+];
+
+const socials = [
+	{
+		name: "Mastodon",
+		url: "https://indieweb.social/@theadhocracy",
+		logo: "https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/instagram-logo.svg",
+		icon: "🐘",
+	},
+	{
+		name: "BlueSky",
+		url: "https://bsky.app/profile/theadhocracy.bsky.social",
+		logo: "https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/twitter-logo.svg",
+		icon: "🦋",
+	},
+	{
+		name: "Last.FM",
+		url: "https://www.last.fm/user/theAdhocracy",
+		logo: "https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/instagram-logo.svg",
+		icon: "🎧",
+	},
+	{
+		name: "IndieWeb",
+		url: "https://indieweb.org/user:theadhocracy.co.uk",
+		logo: "https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/instagram-logo.svg",
+		icon: "🌐",
+	},
+];
+
+const rssFeeds = [
+	{
+		icon: '<svg xmlns="http://www.w3.org/2000/svg" aria-label="RSS" role="img" viewBox="0 0 512 512"><path d="m0 0H512V512H0" fill="#f80"/><path fill="#fff" d="m109 271A132 133 0 01241 403h60A192 193 0 00109 211v-54A246 247 0 01355 403h60A306 307 0 00109 97m35 235a35 35 0 102 0"/></svg>',
+		name: "All Posts",
+		url: "/rss.xml",
+		logo: "https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/rss-icon.svg",
+	},
+	{
+		name: "Articles",
+		url: "/rss-articles.xml",
+		logo: "https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/rss-icon.svg",
+	},
+	{
+		name: "Reviews",
+		url: "/rss-reviews.xml",
+		logo: "https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/rss-icon.svg",
+	},
+	{
+		name: "Notes",
+		url: "/rss-notes.xml",
+		logo: "https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/rss-icon.svg",
+	},
+];
+
+const sideProjects = [
+	{
+		name: "Hall of Records",
+		url: "https://lp.theadhocracy.co.uk/",
+		icon: "💿",
+	},
+	{
+		name: "Adhopracy",
+		url: "https://pub.theadhocracy.co.uk/",
+		icon: "🍺",
+	},
+];
 ---
 
 <footer id="footer">
-	<section>
-		<h2>Made By Me, But Made Possible By:</h2>
-		<p>
-			CMS:{" "}
-			<a href="https://craftcms.com/">
-				<img
-					class="wide-logo"
-					src="https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/craft-logo.svg"
-					alt="Craft CMS"
-				/>
-			</a>
-		</p>
-		<p>
-			Build:{" "}
-			<a href="https://www.gatsbyjs.org/">
-				<img
-					src="https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/gatsby-logo.svg"
-					alt="Gatsby"
-				/>
-			</a>
-		</p>
-		<p>
-			Deployment:{" "}
-			<a href="https://github.com/">
-				<img
-					src="https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/github-logo.svg"
-					alt="GitHub"
-				/>
-			</a>
-		</p>
-		<p>
-			Hosting:{" "}
-			<a href="https://www.netlify.com/">
-				<img
-					src="https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/netlify-logo.svg"
-					alt="Netlify"
-				/>
-			</a>
-		</p>
-	</section>
-	<section>
-		<h2>Connect With Me:</h2>
-		<p>
-			BlueSky{" "}
-			<a href="https://bsky.app/profile/theadhocracy.bsky.social" rel="me">
-				<img
-					style="rotate: 180deg;"
-					src="https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/twitter-logo.svg"
-					alt=""
-				/>
-			</a>
-		</p>
-		<p>
-			Instagram{" "}
-			<a href="https://instagram.com/theadhocracy" rel="me">
-				<img
-					src="https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/instagram-logo.svg"
-					alt=""
-				/>
-			</a>
-		</p>
-		<p>
-			500px{" "}
-			<a href="https://500px.com/theadhocracy" rel="me">
-				<img
-					src="https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/500px-logo.svg"
-					alt=""
-				/>
-			</a>
-		</p>
-		<p>
-			GitHub{" "}
-			<a href="https://github.com/theadhocracy" rel="me">
-				<img
-					src="https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/github-logo.svg"
-					alt=""
-				/>
-			</a>
-		</p>
-	</section>
-	<section>
-		<h2>Keep Up To Date:</h2>
-		<p>
-			All Posts{" "}
-			<a href="/rss.xml">
-				<img
-					src="https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/rss-icon.svg"
-					alt=""
-				/>
-			</a>
-		</p>
-		<p>
-			Articles{" "}
-			<a href="/rss-articles.xml">
-				<img
-					src="https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/rss-icon.svg"
-					alt=""
-				/>
-			</a>
-		</p>
-		<p>
-			Journal{" "}
-			<a href="/rss-journal.xml">
-				<img
-					src="https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/rss-icon.svg"
-					alt=""
-				/>
-			</a>
-		</p>
-		<p>
-			Notes{" "}
-			<a href="/rss-notes.xml">
-				<img
-					src="https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Icons/rss-icon.svg"
-					alt=""
-				/>
-			</a>
-		</p>
-	</section>
-	<p class="copyright">
-		<a href="https://www.youtube.com/watch?v=czgOWmtGVGs">&copy; {yearHE} HE</a>
-		<span>|</span>{" "}
-		<a href="https://github.com/theAdhocracy/theadhocracy-web-v4">
-			<span>&#9419;</span>
-			{version}
-		</a>
-	</p>
+	<div>
+		<section>
+			<h2>Other Stuff:</h2>
+			<ul role="list">
+				{
+					sideProjects.map((item) => {
+						return (
+							<li>
+								<span class="icon">{item.icon}</span>{" "}
+								<a href={item.url}>{item.name}</a>
+							</li>
+						);
+					})
+				}
+			</ul>
+		</section>
+		<section>
+			<h2>Elsewhere:</h2>
+			<ul role="list">
+				{
+					socials.map((item) => {
+						return (
+							<li>
+								<span class="icon">{item.icon}</span>{" "}
+								<a href={item.url}>{item.name}</a>
+							</li>
+						);
+					})
+				}
+			</ul>
+		</section>
+		<section>
+			<h2>Made With:</h2>
+			<ul role="list">
+				{
+					madeWith.map((item) => {
+						return (
+							<li>
+								<span class="icon">{item.icon}</span>{" "}
+								<a href={item.url}>{item.name}</a>
+							</li>
+						);
+					})
+				}
+			</ul>
+		</section>
+		<section>
+			<h2>Site Feeds:</h2>
+			<ul role="list">
+				{
+					rssFeeds.map((item) => {
+						return (
+							<li>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									aria-hidden="true"
+									viewBox="0 0 410 410"
+									width="1em"
+									height="1em"
+								>
+									<path
+										fill="var(--orange)"
+										d="m109 271A132 133 0 01241 403h60A192 193 0 00109 211v-54A246 247 0 01355 403h60A306 307 0 00109 97m35 235a35 35 0 102 0"
+									/>
+								</svg>{" "}
+								<a href={item.url}>{item.name}</a>
+							</li>
+						);
+					})
+				}
+			</ul>
+		</section>
+		<section>
+			<p>
+				&copy; Est. <a href="https://www.youtube.com/watch?v=czgOWmtGVGs">
+					1,2015‒{yearHE} HE</a
+				>
+			</p>
+			<p>
+				Ver. <a href="https://github.com/theAdhocracy/theadhocracy-web-v4"
+					>{version}</a
+				>
+			</p>
+			<p>
+				No part of this website may be used or reproduced in any manner for the
+				purpose of training artificial intelligence technologies or systems,
+				large language models (LLMs), or data models. The author expressly
+				reserves this work from the text and data mining exception.
+			</p>
+		</section>
+	</div>
 </footer>
