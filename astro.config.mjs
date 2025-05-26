@@ -5,7 +5,7 @@ import { loadEnv } from "vite";
 import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
-const env = loadEnv(process.env.NODE_ENV, process.cwd());
+const { SITE_URL } = loadEnv(process.env.NODE_ENV, process.cwd(), "");
 
 export default defineConfig({
 	vite: {
@@ -15,7 +15,7 @@ export default defineConfig({
 	},
 	output: "hybrid",
 	adapter: node({ mode: "standalone" }),
-	site: env.SITE_URL,
+	site: SITE_URL,
 	integrations: [sitemap()],
 	trailingSlash: "never",
 	build: {
