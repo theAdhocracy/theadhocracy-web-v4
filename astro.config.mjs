@@ -13,14 +13,10 @@ export default defineConfig({
 			transformer: "lightningcss",
 		},
 	},
-	output: "static",
 	adapter: node({ mode: "standalone" }),
 	site: SITE_URL,
 	integrations: [sitemap()],
 	trailingSlash: "never",
-	build: {
-		format: "directory",
-	},
 	redirects: {
 		// Articles => Reviews
 		"/article/gretel-and-the-dark-spoilers": "/review/book/gretel-and-the-dark",
