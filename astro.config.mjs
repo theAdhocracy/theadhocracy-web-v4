@@ -13,7 +13,7 @@ export default defineConfig({
 			transformer: "lightningcss",
 		},
 	},
-	output: "hybrid",
+	output: "static",
 	adapter: node({ mode: "standalone" }),
 	site: SITE_URL,
 	integrations: [sitemap()],
