@@ -43,9 +43,12 @@ export default defineConfig({
 		"/wrote/month-in-media-july-2017-41-part-two": "/wrote/month-in-media-july-2017",
 		"/wrote/month-in-media-january-2017-5-part-two": "/wrote/month-in-media-january-2017",
 		// Redirect old content-specific URLs to new wrote/note structure
-		"/article/:slug": "/wrote/:slug",
-		"/journal/2020/:month/:slug": "/wrote/:slug",
+		"/article/[slug]": "/wrote/[slug]",
+		"/journal/2020/[month]/[slug]": "/wrote/[slug]",
 		// Redirect original WordPress URL structure
-		"/:year(2015|2016|2017|2018)/:month/:day/:slug": "/wrote/:slug",
+		"/2015/[month]/[day]/[slug]": "/wrote/[slug]",
+		"/2016/[month]/[day]/[slug]": "/wrote/[slug]",
+		"/2017/[month]/[day]/[slug]": "/wrote/[slug]",
+		"/2018/[month]/[day]/[slug]": "/wrote/[slug]",
 	}
 });
