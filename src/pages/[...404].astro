@@ -2,6 +2,7 @@
 export const prerender = false;
 
 import Page_404 from "./404.astro";
+// NOTE: This page should not be needed, but appears to handle production 404s when the Astro automatic error handling gets overridden.
 ---
 
 <Page_404 />
