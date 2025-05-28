@@ -269,6 +269,7 @@ const webmentions =
 		--gutter: 10rem;
 		--full-width: calc(var(--main) + (2 * var(--aside)) + (2 * var(--gutter)));
 		--part-span: calc(var(--main) + var(--aside));
+		--breakout: calc(var(--main) + 2.5rem);
 	}
 
 	.article {
@@ -369,6 +370,15 @@ const webmentions =
 			flex-wrap: wrap;
 			padding: 0;
 			list-style: none;
+		}
+
+		blockquote {
+			max-width: var(--breakout);
+			margin-block: 2rem;
+			margin-inline: auto;
+			padding-inline: 1rem;
+			border-inline-start: 4px solid var(--green);
+			font-style: italic;
 		}
 
 		pre {
