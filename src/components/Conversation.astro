@@ -69,6 +69,11 @@ const randomImage = (array: any) => {
 	</p>
 	{
 		comments.map((mention: any) => {
+			// Handle empty mentions
+			if (!mention.content) {
+				return;
+			}
+
 			// Date and time
 			const pubDate = mention.published ? mention.published : mention.received;
 			const date = new Date(pubDate).toLocaleDateString("en-GB", {
