@@ -40,11 +40,12 @@ export default defineConfig({
 		"/wrote/month-in-media-january-2017-5-part-two": "/wrote/month-in-media-january-2017",
 		// Redirect old content-specific URLs to new wrote/note structure
 		"/article/[slug]": "/wrote/[slug]",
-		"/journal/2020/[month]/[slug]": "/wrote/[slug]",
+		// TODO: Handle date-based redirects; broke sometime between Astro 5.9 and 5.13; may need to be handled on the server
+		// "/journal/2020/[month]/[slug]": "/wrote/[slug]",
 		// Redirect original WordPress URL structure
-		"/2015/[month]/[day]/[slug]": "/wrote/[slug]",
-		"/2016/[month]/[day]/[slug]": "/wrote/[slug]",
-		"/2017/[month]/[day]/[slug]": "/wrote/[slug]",
-		"/2018/[month]/[day]/[slug]": "/wrote/[slug]",
+		// "/2015/[month]/[day]/[slug]": "/wrote/[slug]",
+		// "/2016/[month]/[day]/[slug]": "/wrote/[slug]",
+		// "/2017/[month]/[day]/[slug]": "/wrote/[slug]",
+		// "/2018/[month]/[day]/[slug]": "/wrote/[slug]",
 	}
 });
