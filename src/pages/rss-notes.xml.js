@@ -1,21 +1,15 @@
 import rss from "@astrojs/rss";
+import { fetchCraftAPI } from "@/utilities/craft";
 
 export async function GET(context) {
-	const data = await fetch("https://cms.theadhocracy.co.uk/notes.json", {
-		method: "GET",
-		headers: {
-			"content-type": "application/json",
-			Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
-		},
-	});
-	const response = await data.json();
+	const notes = await fetchCraftAPI("notes.json");
 
 	return rss({
 		title: "theAdhocracy | Notes",
 		description: "Ad hoc notes from an ad hoc mind.",
 		site: context.site,
 		trailingSlash: false,
-		items: response.data.slice(0, 12).map((post) => ({
+		items: notes.slice(0, 12).map((post) => ({
 			title: post.title,
 			pubDate: post.date.datetime,
 			description: post.snippet,

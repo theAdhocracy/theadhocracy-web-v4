@@ -2,20 +2,14 @@
 import Calendar from "@/components/Calendar.astro";
 import Card from "@/components/Card.astro";
 import Layout from "@/layouts/Layout.astro";
+import { fetchCraftAPI } from "@/utilities/craft";
 import type { GetStaticPaths } from "astro";
 
 // Generate static pages
 export const getStaticPaths = (async ({ paginate }) => {
-	const data = await fetch("https://cms.theadhocracy.co.uk/journals.json", {
-		method: "GET",
-		headers: {
-			"content-type": "application/json",
-			Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
-		},
-	});
-	const response = await data.json();
+	const journals = await fetchCraftAPI("journals.json");
 
-	return paginate(response.data, { pageSize: 1000 });
+	return paginate(journals, { pageSize: 1000 });
 }) satisfies GetStaticPaths;
 
 // Handle props

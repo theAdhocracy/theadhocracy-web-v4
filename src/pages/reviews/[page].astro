@@ -4,19 +4,13 @@ import type { GetStaticPaths } from "astro";
 import Card from "@/components/Card.astro";
 import PageNav from "@/components/PageNav.astro";
 import Layout from "@/layouts/Layout.astro";
+import { fetchCraftAPI } from "@/utilities/craft";
 
 // Generate static pages
 export const getStaticPaths = (async ({ paginate }) => {
-	const data = await fetch("https://cms.theadhocracy.co.uk/reviews.json", {
-		method: "GET",
-		headers: {
-			"content-type": "application/json",
-			Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
-		},
-	});
-	const response = await data.json();
+	const reviews = await fetchCraftAPI("reviews.json");
 
-	return paginate(response.data, { pageSize: 12 });
+	return paginate(reviews, { pageSize: 12 });
 }) satisfies GetStaticPaths;
 
 // Handle props

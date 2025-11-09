@@ -1,16 +1,10 @@
 ---
 import Card from "@/components/Card.astro";
 import Layout from "../layouts/Layout.astro";
+import { fetchCraftAPI } from "@/utilities/craft";
 
 // Fetch homepage feed
-const data = await fetch("https://cms.theadhocracy.co.uk/posts.json", {
-	method: "GET",
-	headers: {
-		"content-type": "application/json",
-		Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
-	},
-});
-const response = await data.json();
+const posts = await fetchCraftAPI("posts.json");
 ---
 
 <Layout>
@@ -35,8 +29,8 @@ const response = await data.json();
 			<h2>What I'm Up To</h2>
 		</header>
 		<section class="content-grid">
-			{response.data.map((post: any) => <Card post={post} />)}
-			<a href="/articles/">Explore?</a>
+			{posts.map((post: any) => <Card post={post} />)}
+			<a href="/articles">Explore?</a>
 		</section>
 	</main>
 </Layout>

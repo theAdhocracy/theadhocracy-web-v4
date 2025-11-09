@@ -5,19 +5,13 @@ import metadata from "@/data/metadata.json";
 import Discovery from "@/components/Discovery.astro";
 import RelatedContent from "@/components/RelatedContent.astro";
 import Layout from "@/layouts/Layout.astro";
+import { fetchCraftAPI } from "@/utilities/craft";
 
 // Generate static pages
 export const getStaticPaths = (async () => {
-	const notes = await fetch("https://cms.theadhocracy.co.uk/notes.json", {
-		method: "GET",
-		headers: {
-			"content-type": "application/json",
-			Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
-		},
-	});
-	const response = await notes.json();
+	const notes = await fetchCraftAPI("notes.json");
 
-	return response.data.map((item: any, index: number) => {
+	return notes.map((item: any, index: number) => {
 		return {
 			params: {
 				slug: item.slug,
@@ -29,17 +23,17 @@ export const getStaticPaths = (async () => {
 						index === 0
 							? null
 							: {
-									slug: response.data[index - 1].slug,
-									title: response.data[index - 1].title,
-									desc: response.data[index - 1].snippet,
+									slug: notes[index - 1].slug,
+									title: notes[index - 1].title,
+									desc: notes[index - 1].snippet,
 								},
 					prev:
-						index === response.data.length - 1
+						index === notes.length - 1
 							? null
 							: {
-									slug: response.data[index + 1].slug,
-									title: response.data[index + 1].title,
-									desc: response.data[index + 1].snippet,
+									slug: notes[index + 1].slug,
+									title: notes[index + 1].title,
+									desc: notes[index + 1].snippet,
 								},
 				},
 			},
