@@ -3,22 +3,13 @@ import type { GetStaticPaths } from "astro";
 
 import Card from "@/components/Card.astro";
 import Layout from "@/layouts/Layout.astro";
+import { fetchCraftAPI } from "@/utilities/craft";
 
 // Generate static pages
 export const getStaticPaths = (async () => {
-	const reviews = await fetch(
-		"https://cms.theadhocracy.co.uk/collections.json",
-		{
-			method: "GET",
-			headers: {
-				"content-type": "application/json",
-				Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
-			},
-		}
-	);
-	const response = await reviews.json();
+	const collections = await fetchCraftAPI("collections.json");
 
-	return response.data.map((item: any) => {
+	return collections.map((item: any) => {
 		return {
 			params: {
 				slug: item.slug,

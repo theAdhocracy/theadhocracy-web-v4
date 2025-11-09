@@ -8,40 +8,14 @@ import { fetchCraftAPI } from "@/utilities/craft";
 import { getStarRating } from "@/utilities/content";
 
 // Fetch data
-const reviewsData = await fetch("https://cms.theadhocracy.co.uk/reviews.json", {
-	method: "GET",
-	headers: {
-		"content-type": "application/json",
-		Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
-	},
-});
-const reviewsResponse = await reviewsData.json();
-
-const seriesData = await fetch("https://cms.theadhocracy.co.uk/series.json", {
-	method: "GET",
-	headers: {
-		"content-type": "application/json",
-		Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
-	},
-});
-const seriesResponse = await seriesData.json();
-
-const collectionData = await fetch(
-	"https://cms.theadhocracy.co.uk/collections.json",
-	{
-		method: "GET",
-		headers: {
-			"content-type": "application/json",
-			Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
-		},
-	}
-);
-const collectionResponse = await collectionData.json();
+const reviewsData = await fetchCraftAPI("reviews.json");
+const seriesData = await fetchCraftAPI("series.json");
+const collectionData = await fetchCraftAPI("collections.json");
 
 // Set root pathways for data
-const reviews = reviewsResponse.data.slice(0, 6);
+const reviews = reviewsData.slice(0, 6);
 
-const series = seriesResponse.data
+const series = seriesData
 	.sort((a: any, b: any) => {
 		// Compare and return whichever is more recent
 		return Date.parse(b?.updated) - Date.parse(a?.updated);
@@ -49,7 +23,7 @@ const series = seriesResponse.data
 	.slice(0, 6);
 
 // TODO: see if this can be simplified like the series sort
-const collections = collectionResponse.data
+const collections = collectionData
 	.sort((a: any, b: any) => {
 		// Gets the most recently updated review for each series, and sorts in descending order (so most recent review first)
 		const aUpdated = a.reviews?.reduce((prev: any, current: any) => {
@@ -117,12 +91,12 @@ const range = !!paramMin && !!paramMax ? `${paramMin}|${paramMax}` : "";
 
 // #2 Fetch possible filters/categories
 const mediaTypes = await fetchCraftAPI(
-	`https://cms.theadhocracy.co.uk/api/category/media?q=${paramQuery}&m=${paramTypes}&r=${range}`
+	`api/category/media?q=${paramQuery}&m=${paramTypes}&r=${range}`
 );
 
 // #3 Query search API
 const searchResults = await fetchCraftAPI(
-	`https://cms.theadhocracy.co.uk/search/reviews?q=${paramQuery}&m=${paramTypes}&r=${range}`
+	`search/reviews?q=${paramQuery}&m=${paramTypes}&r=${range}`
 );
 
 // #4 Set UI state

@@ -15,16 +15,16 @@ const paramPage = params.get("page") || 0;
 
 // #2 Fetch possible filters/categories
 const filters = await fetchCraftAPI(
-	`https://cms.theadhocracy.co.uk/api/category/writing?q=${paramQuery}&c=${paramFilters}&t=${paramTypes}`
+	`api/category/writing?q=${paramQuery}&c=${paramFilters}&t=${paramTypes}`
 );
 
 const types = await fetchCraftAPI(
-	`https://cms.theadhocracy.co.uk/stats/blog?q=${paramQuery}&c=${paramFilters}`
+	`stats/blog?q=${paramQuery}&c=${paramFilters}`
 );
 
 // #3 Query search API
 const searchResults = await fetchCraftAPI(
-	`https://cms.theadhocracy.co.uk/search/articles?q=${paramQuery}&c=${paramFilters}&t=${paramTypes}&p=${paramPage}`
+	`search/articles?q=${paramQuery}&c=${paramFilters}&t=${paramTypes}&p=${paramPage}`
 );
 
 // #4 Set UI state

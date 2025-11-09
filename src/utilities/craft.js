@@ -5,10 +5,9 @@ dotenv.config();
 
 // Fetch data from the API
 export const fetchCraftAPI = async (endpoint) => {
-	const data = await fetch(`${endpoint}`, {
+	const data = await fetch(`https://cms.theadhocracy.co.uk/${endpoint}`, {
 		method: "GET",
 		headers: {
-			"content-type": "application/json",
 			Authorization: `Bearer ${process.env.CRAFT_API_KEY}`,
 		},
 	})

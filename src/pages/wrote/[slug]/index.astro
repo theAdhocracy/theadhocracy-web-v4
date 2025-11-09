@@ -7,28 +7,13 @@ import Discovery from "@/components/Discovery.astro";
 import Resources from "@/components/Resources.astro";
 import RelatedContent from "@/components/RelatedContent.astro";
 import Conversation from "@/components/Conversation.astro";
+import { fetchCraftAPI } from "@/utilities/craft";
 
 // Generate static pages
 export const getStaticPaths = (async () => {
-	const articles = await fetch("https://cms.theadhocracy.co.uk/articles.json", {
-		method: "GET",
-		headers: {
-			"content-type": "application/json",
-			Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
-		},
-	});
-	const fetchedArticles = await articles.json();
-
-	const journals = await fetch("https://cms.theadhocracy.co.uk/journals.json", {
-		method: "GET",
-		headers: {
-			"content-type": "application/json",
-			Authorization: `Bearer ${import.meta.env.CRAFT_API_KEY}`,
-		},
-	});
-	const fetchedJournals = await journals.json();
-
-	const response = fetchedArticles.data.concat(fetchedJournals.data);
+	const articles = await fetchCraftAPI("articles.json");
+	const journals = await fetchCraftAPI("journals.json");
+	const response = articles.concat(journals);
 
 	return response.map((item: any, index: number) => {
 		return {
@@ -275,9 +260,8 @@ const webmentions =
 	.article {
 		--gap: 1em;
 		--font-serif: "Sitka Text", Charter, "Bitstream Charter", Cambria, serif;
-		--font-sans:
-			"Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-			"Droid Sans", "Helvetica Neue", sans-serif;
+		--font-sans: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+			"Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 
 		display: block;
 		font-family: "Sitka Text", Charter, "Bitstream Charter", Cambria, serif;
@@ -311,9 +295,8 @@ const webmentions =
 		h4,
 		h5,
 		h6 {
-			font-family:
-				"Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-				"Droid Sans", "Helvetica Neue", sans-serif;
+			font-family: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+				"Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 		}
 
 		p,
