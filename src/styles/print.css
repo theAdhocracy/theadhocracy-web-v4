@@ -1,0 +1,10 @@
+@media print {
+	:root {
+		font-size: 14px;
+	}
+
+	p,
+	ul {
+		break-inside: avoid;
+	}
+}

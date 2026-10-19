@@ -1,0 +1,20 @@
+/* Design Tokens */
+:root {
+	--green: #a3bf3b;
+	--lightblue: #2abfb0;
+	--blue: #1b7ea6;
+	--orange: #f29f05;
+	--yellow: #f2c12e;
+	--pink: #f22e62;
+
+	--grey: #d8d8d8;
+	--darkgrey: #1d2a34;
+	--lightgrey: #f6f6f6;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+}
+
+html[data-theme="dark"] {
+}
