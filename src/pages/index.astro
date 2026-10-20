@@ -25,9 +25,7 @@ const posts = await fetchCraftAPI("posts.json");
 		<p class="p-note">Ad hoc thoughts from an ad hoc mind!</p>
 	</section>
 	<main id="content">
-		<header>
-			<h2>What I'm Up To</h2>
-		</header>
+		<h2>What I'm Up To</h2>
 		<section class="content-grid">
 			{posts.map((post: any) => <Card post={post} />)}
 			<a href="/articles">Explore?</a>
