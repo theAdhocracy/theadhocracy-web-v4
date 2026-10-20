@@ -10,9 +10,13 @@
 	--grey: #d8d8d8;
 	--darkgrey: #1d2a34;
 	--lightgrey: #f6f6f6;
+
+	/* Disable CSS site wide */
+	--css-enabled: true; /* true/false */
 }
 
 /* Dark Mode */
+/* TODO: Implement dark mode styles */
 @media (prefers-color-scheme: dark) {
 }
 
