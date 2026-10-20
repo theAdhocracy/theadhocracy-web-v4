@@ -11,7 +11,12 @@
 		padding: 0;
 	}
 
+	:root {
+		color-scheme: light dark;
+	}
+
 	html {
+		font-synthesis: none;
 		-moz-text-size-adjust: none;
 		-webkit-text-size-adjust: none;
 		text-size-adjust: none;
@@ -41,6 +46,15 @@
 		max-inline-size: 100%;
 	}
 
+	img {
+		object-fit: contain;
+	}
+
+	picture img {
+		inline-size: 100%;
+		object-fit: contain;
+	}
+
 	svg {
 		max-inline-size: 100%;
 	}
@@ -66,12 +80,20 @@
 	}
 
 	button,
+	input[type="button"],
+	input[type="submit"],
+	input[type="reset"] {
+		inline-size: max-content;
+	}
+
+	button,
 	summary {
 		cursor: pointer;
 	}
 
 	table {
 		border-collapse: collapse;
+		border-spacing: 0;
 	}
 
 	p,
@@ -82,6 +104,7 @@
 	h5,
 	h6 {
 		overflow-wrap: break-word;
+		word-break: break-word;
 	}
 
 	h1,
@@ -108,6 +131,7 @@
 
 	p {
 		font-variant-numeric: proportional-nums;
+		hanging-punctuation: first allow-end last;
 	}
 
 	sub,
@@ -122,16 +146,24 @@
 	}
 
 	code,
-	pre {
+	pre,
+	kbd {
 		font-variant-numeric: slashed-zero;
-	}
-
-	table {
-		border-collapse: collapse;
+		white-space: pre-wrap;
 	}
 
 	address {
 		font-style: normal;
+	}
+
+	ol,
+	ul,
+	dl {
+		list-style: inside;
+	}
+
+	ol {
+		list-style-type: decimal;
 	}
 
 	#root,
@@ -140,7 +172,7 @@
 	}
 
 	:target {
-		scroll-padding-block-start: 2rem;
+		scroll-margin-block: 5ex;
 	}
 
 	:focus {
@@ -151,7 +183,8 @@
 		outline-offset: 0.2rem;
 	}
 
-	:disabled {
+	:disabled,
+	[aria-disabled="true"] {
 		opacity: 1;
 		cursor: not-allowed;
 	}
@@ -170,6 +203,14 @@
 
 		html {
 			scroll-behavior: auto !important;
+		}
+	}
+
+	/* Scroll behaviour */
+	@media screen and (prefers-reduced-motion: no-preference) {
+		html {
+			interpolate-size: allow-keywords;
+			scroll-behavior: smooth;
 		}
 	}
 }
