@@ -1,5 +1,19 @@
-/* Design Tokens */
+/* 
+	Design Tokens 
+
+	Split into: 
+		Primitives (atoms): colours, font families, and other cross-platform design decisions
+		Semantic: named tokens, given meaning specific to the Arena component library
+
+*/
 :root {
+	/**** 
+			Primitives
+						****/
+
+	/* Fonts */
+
+	/* Colours */
 	--green: #a3bf3b;
 	--lightblue: #2abfb0;
 	--blue: #1b7ea6;
@@ -7,18 +21,50 @@
 	--yellow: #f2c12e;
 	--pink: #f22e62;
 
+	/* Shades */
+
+	/* Neutrals */
 	--grey: #d8d8d8;
 	--darkgrey: #1d2a34;
 	--lightgrey: #f6f6f6;
 
+	/* Type Scale */
+
+	/**** 
+			Semantic
+						****/
+
+	--font-default: "";
+
+	--colour-text: var(--darkgrey);
+	--colour-text-inverse: var(--lightgrey);
+
+	--colour-bg: var(--lightgrey);
+	--colour-bg-inverse: var(--darkgrey);
+
+	--colour-border: var(--grey);
+
+	--radius-circle: 50%;
+
+	--gutter-page: 20px;
+
+	/**** 
+			Overrides
+						****/
+
 	/* Disable CSS site wide */
 	--css-enabled: true; /* true/false */
 }
+
+/**** 
+		Themes
+				****/
 
 /* Dark Mode */
 /* TODO: Implement dark mode styles */
 @media (prefers-color-scheme: dark) {
 }
 
-html[data-theme="dark"] {
+body[data-theme="dark"],
+[data-theme="dark"] {
 }

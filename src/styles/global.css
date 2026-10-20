@@ -1,6 +1,8 @@
 @layer reset, base, theme, utilities;
 @import "./reset.css";
+@import "./fonts.css";
 @import "./theme.css";
+@import "./layout.css";
 @import "./print.css";
 
 @layer base {
