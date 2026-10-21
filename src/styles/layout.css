@@ -1,5 +1,11 @@
 /* Partially based on Every Layout (https://every-layout.dev/) */
 
+[data-layout="flex"] {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--gutter, 1.5rem);
+}
+
 [data-layout="grid"] {
 	display: grid;
 	grid-template-columns: repeat(

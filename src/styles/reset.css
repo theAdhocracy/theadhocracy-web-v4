@@ -23,6 +23,7 @@
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		block-size: 100%;
+		text-decoration-skip-ink: auto;
 	}
 
 	body {

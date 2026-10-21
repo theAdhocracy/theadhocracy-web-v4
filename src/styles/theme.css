@@ -20,6 +20,7 @@
 	--orange: #f29f05;
 	--yellow: #f2c12e;
 	--pink: #f22e62;
+	--purple: #9b5de5;
 
 	/* Shades */
 
@@ -43,6 +44,9 @@
 	--colour-bg-inverse: var(--darkgrey);
 
 	--colour-border: var(--grey);
+
+	--gradient-rainbow: var(--blue), var(--lightblue), var(--green), var(--yellow),
+		var(--orange), var(--pink);
 
 	--radius-circle: 50%;
 
