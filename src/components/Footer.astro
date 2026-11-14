@@ -1,7 +1,6 @@
 ---
-import metadata from "@/data/metadata.json";
-
-const { version } = metadata;
+// Get version number from Git release tag (see deployment workflow)
+const version = import.meta.env.PUBLIC_SITE_VERSION ?? "v4.0.0";
 
 // Creating Human Era Year
 const today = new Date();
