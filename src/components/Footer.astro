@@ -194,3 +194,74 @@ const sideProjects = [
 		</section>
 	</div>
 </footer>
+
+<style>
+	#footer {
+		grid-area: footer;
+		padding: 2rem 2rem 1rem;
+		background-color: var(--darkgrey);
+		color: var(--pink);
+
+		& > div {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+			gap: 2rem;
+			width: 100%;
+			max-width: 65rem;
+			margin-inline: auto;
+		}
+
+		section {
+			max-width: 82rem;
+			background: linear-gradient(90deg, var(--orange), var(--pink));
+			-webkit-text-fill-color: transparent;
+			-webkit-background-clip: text;
+			background-clip: text;
+		}
+
+		section:last-of-type {
+			grid-column: 1 / -1;
+		}
+
+		h2 {
+			font-size: 1.5rem;
+			margin: 0.5em 0;
+			width: 100%;
+		}
+
+		a {
+			color: var(--grey);
+			text-decoration-thickness: 2px;
+			text-decoration-color: var(--orange);
+			text-underline-offset: 0.2rem;
+		}
+
+		li + li {
+			margin-block-start: 0.25rem;
+		}
+
+		p + p {
+			margin-block-start: 0em;
+		}
+
+		p:has(+ p) {
+			margin-block-end: 0.3em;
+		}
+
+		svg {
+			margin-inline-end: 0.2rem;
+		}
+	}
+
+	/* Desktop */
+
+	@media screen and (min-width: 400px) {
+		#footer {
+			padding: 2rem 4rem 1rem;
+
+			& > div {
+				gap: 2rem 5rem;
+			}
+		}
+	}
+</style>
