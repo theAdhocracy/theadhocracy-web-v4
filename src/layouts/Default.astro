@@ -1,0 +1,26 @@
+---
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Global from "@/layouts/Global.astro";
+
+interface Props {
+	title?: string;
+	meta?: {
+		desc?: string;
+		image?: string;
+		type?: string;
+		category?: string;
+		tags?: string;
+		published?: string;
+		updated?: string;
+	};
+}
+
+const { title, meta } = Astro.props;
+---
+
+<Global title={title} meta={meta}>
+	<Header />
+	<slot />
+	<Footer />
+</Global>

@@ -1,0 +1,79 @@
+/* 
+	Design Tokens 
+
+	Split into: 
+		Primitives (atoms): colours, font families, and other cross-platform design decisions
+		Semantic: named tokens, given meaning specific to the Arena component library
+
+*/
+:root {
+	/**** 
+			Primitives
+						****/
+
+	/* Fonts */
+	--font-serif: "Sitka Text", Charter, "Bitstream Charter", Cambria, serif;
+	--font-sans: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+		"Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+
+	/* Colours */
+	--green: #a3bf3b;
+	--lightblue: #2abfb0;
+	--blue: #1b7ea6;
+	--orange: #f29f05;
+	--yellow: #f2c12e;
+	--pink: #f22e62;
+	--purple: #9b5de5;
+
+	/* Shades */
+
+	/* Neutrals */
+	--grey: #d8d8d8;
+	--darkgrey: #1d2a34;
+	--lightgrey: #f6f6f6;
+	--midgrey: #595959;
+
+	/* Type Scale */
+
+	/**** 
+			Semantic
+						****/
+
+	--font-default: var(--font-sans);
+
+	--colour-text: var(--darkgrey);
+	--colour-text-inverse: var(--lightgrey);
+	--colour-text-faded: var(--midgrey);
+
+	--colour-bg: var(--lightgrey);
+	--colour-bg-inverse: var(--darkgrey);
+
+	--colour-border: var(--grey);
+
+	--gradient-rainbow: var(--blue), var(--lightblue), var(--green), var(--yellow),
+		var(--orange), var(--pink);
+
+	--radius-circle: 50%;
+
+	--gutter-page: 20px;
+
+	/**** 
+			Overrides
+						****/
+
+	/* Disable CSS site wide */
+	--css-enabled: true; /* true/false */
+}
+
+/**** 
+		Themes
+				****/
+
+/* Dark Mode */
+/* TODO: Implement dark mode styles */
+@media (prefers-color-scheme: dark) {
+}
+
+body[data-theme="dark"],
+[data-theme="dark"] {
+}

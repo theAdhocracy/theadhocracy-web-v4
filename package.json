@@ -16,7 +16,6 @@
 		"@astrojs/sitemap": "^3.6.0",
 		"astro": "^5.15.4",
 		"dotenv": "^17.2.3",
-		"lightningcss": "^1.26.0",
 		"typescript": "^5.9.3"
 	}
 }

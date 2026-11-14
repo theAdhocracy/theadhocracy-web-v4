@@ -2,7 +2,7 @@
 
 ---
 
-<header id="header">
+<header>
 	<a href="/">
 		<img
 			src="https://cms.theadhocracy.co.uk/assets/theadhocracy/website/Logos/adhoc-face.svg"
@@ -12,26 +12,147 @@
 		/>
 		<p>theAdhocracy</p>
 	</a>
+	<nav>
+		<ul role="list" data-layout="flex">
+			<li>
+				<a href="/">Home</a>
+			</li>
+			<li>
+				<a href="/articles">Articles</a>
+			</li>
+			<li>
+				<a href="/journal">Journal</a>
+			</li>
+			<li>
+				<a href="/notes">Notes</a>
+			</li>
+			<li>
+				<a href="/reviews">Reviews</a>
+			</li>
+			<li>
+				<a href="/stuff">Stuff</a>
+			</li>
+			<li>
+				<a href="/search">Search</a>
+			</li>
+		</ul>
+	</nav>
 </header>
-<nav id="nav">
-	<ul>
-		<li>
-			<a href="/">Home</a>
-		</li>
-		<li>
-			<a href="/articles">Articles</a>
-		</li>
-		<li>
-			<a href="/journal">Journal</a>
-		</li>
-		<li>
-			<a href="/notes">Notes</a>
-		</li>
-		<li>
-			<a href="/reviews">Reviews</a>
-		</li>
-		<li>
-			<a href="/search">Search</a>
-		</li>
-	</ul>
-</nav>
+
+<style>
+	@keyframes hoverColour {
+		from {
+			background-position: left center;
+		}
+
+		to {
+			background-position: right center;
+		}
+	}
+
+	header {
+		grid-area: header;
+		margin-block-end: 16px;
+		padding-block: 32px;
+		background-color: var(--colour-bg);
+		border-top: 10px solid var(--pink);
+		border-image: linear-gradient(90deg, var(--gradient-rainbow)) 1;
+		text-align: center;
+
+		img {
+			margin: 0 auto;
+			max-block-size: 10rem;
+		}
+
+		a {
+			color: var(--colour-bg-inverse);
+			text-decoration: none;
+		}
+
+		p {
+			color: black;
+			background-image: linear-gradient(
+				90deg,
+				black 20%,
+				var(--gradient-rainbow),
+				black 75%
+			);
+			-webkit-text-fill-color: transparent;
+			-webkit-background-clip: text;
+			background-clip: text;
+			background-position: left center;
+			background-size: 400% auto;
+			font-size: 2rem;
+			margin: 0.67em 0;
+			font-weight: bold;
+		}
+
+		a:hover p {
+			background-position: right center;
+			color: #ef9671;
+			animation: hoverColour 3000ms ease-in-out infinite;
+		}
+	}
+
+	nav {
+		--gutter: 0.5rem;
+
+		padding-inline: var(--gutter-page);
+
+		a {
+			display: flex;
+			padding-block: 5px;
+			border-block-end: 4px solid var(--colour-border);
+			/* NTS: I am using border rather than text-decoration because the latter does not appear within focus outlines, which looks odd */
+			color: var(--colour-text);
+			font-size: 1.1rem;
+			line-height: 1.1;
+			text-box-trim: trim-both;
+		}
+
+		ul {
+			inline-size: max-content;
+			max-inline-size: 100%;
+			justify-content: center;
+			margin: 0 auto;
+		}
+
+		li {
+			padding: 8px;
+		}
+
+		li:nth-of-type(1) a {
+			border-color: var(--blue);
+		}
+
+		li:nth-of-type(2) a {
+			border-color: var(--lightblue);
+		}
+
+		li:nth-of-type(3) a {
+			border-color: var(--green);
+		}
+
+		li:nth-of-type(4) a {
+			border-color: var(--yellow);
+		}
+
+		li:nth-of-type(5) a {
+			border-color: var(--orange);
+		}
+
+		li:nth-of-type(6) a {
+			border-color: var(--pink);
+		}
+
+		li:nth-of-type(7) a {
+			border-color: var(--purple);
+		}
+
+		li a:hover,
+		li a:focus-visible {
+			padding-block-end: 8px;
+			margin-block-end: -8px;
+		}
+	}
+</style>
