@@ -8,11 +8,6 @@ import sitemap from "@astrojs/sitemap";
 const { SITE_URL } = loadEnv(process.env.NODE_ENV, process.cwd(), "");
 
 export default defineConfig({
-	vite: {
-		css: {
-			transformer: "lightningcss",
-		},
-	},
 	adapter: node({ mode: "standalone" }),
 	site: SITE_URL,
 	integrations: [sitemap()],
