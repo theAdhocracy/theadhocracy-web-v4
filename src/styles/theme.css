@@ -12,6 +12,9 @@
 						****/
 
 	/* Fonts */
+	--font-serif: "Sitka Text", Charter, "Bitstream Charter", Cambria, serif;
+	--font-sans: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+		"Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 
 	/* Colours */
 	--green: #a3bf3b;
@@ -28,6 +31,7 @@
 	--grey: #d8d8d8;
 	--darkgrey: #1d2a34;
 	--lightgrey: #f6f6f6;
+	--midgrey: #595959;
 
 	/* Type Scale */
 
@@ -35,10 +39,11 @@
 			Semantic
 						****/
 
-	--font-default: "";
+	--font-default: var(--font-sans);
 
 	--colour-text: var(--darkgrey);
 	--colour-text-inverse: var(--lightgrey);
+	--colour-text-faded: var(--midgrey);
 
 	--colour-bg: var(--lightgrey);
 	--colour-bg-inverse: var(--darkgrey);
