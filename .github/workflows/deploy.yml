@@ -1,0 +1,222 @@
+name: Build and deploy
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: read
+
+concurrency:
+  group: theadhocracy-production
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Astro Build
+    if: startsWith(github.event.release.tag_name, 'release-')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.3
+          cache: npm
+
+      - name: Install build dependencies
+        run: npm ci
+
+      - name: Set site version
+        # Stores the current semver number from release tag; used in footer
+        # Strips the "release-" from the start, to only include version number
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: echo "PUBLIC_SITE_VERSION=${RELEASE_TAG#release-}" >> "$GITHUB_ENV"
+
+      - name: Build Astro app
+        run: npm run build
+
+      - name: Record built Astro assets
+        # Creates a list of stored assets so that open pages do not lose images etc. when the sources are switched
+        run: |
+          if [ -d dist/client/_astro ]; then
+            find dist/client/_astro -type f -printf '%P\n' | sort > astro-assets.txt
+          else
+            : > astro-assets.txt
+          fi
+
+      - name: Upload deployment artifact
+        # Uploads the build output and package manifests to be downloaded in the next deploy job.
+        uses: actions/upload-artifact@v4
+        with:
+          name: astro-deployment
+          path: |
+            dist/
+            package.json
+            package-lock.json
+            astro-assets.txt
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy to Production
+    needs: build
+    if: startsWith(github.event.release.tag_name, 'release-')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download deployment artifact
+        # Downloads the build output and package manifests from the previous build job.
+        uses: actions/download-artifact@v4
+        with:
+          name: astro-deployment
+          path: deployment
+
+      - name: Configure SSH
+        # Creates SSH folder & files, in restricted mode, within the GitHub runner environment.
+        env:
+          KRYSTAL_SSH_PRIVATE_KEY: ${{ secrets.KRYSTAL_SSH_PRIVATE_KEY }}
+          KRYSTAL_SSH_KEY_PASSPHRASE: ${{ secrets.KRYSTAL_SSH_KEY_PASSPHRASE }}
+          KRYSTAL_SSH_KNOWN_HOSTS: ${{ secrets.KRYSTAL_SSH_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$KRYSTAL_SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          printf '%s\n' "$KRYSTAL_SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_ed25519 ~/.ssh/known_hosts
+
+          printf '%s\n' '#!/bin/sh' 'printf "%s\n" "$KRYSTAL_SSH_KEY_PASSPHRASE"' > ~/.ssh/askpass
+          chmod 700 ~/.ssh/askpass
+
+          eval "$(ssh-agent -s)"
+          printf 'SSH_AUTH_SOCK=%s\n' "$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+          printf 'SSH_AGENT_PID=%s\n' "$SSH_AGENT_PID" >> "$GITHUB_ENV"
+          export SSH_ASKPASS="$HOME/.ssh/askpass"
+          export SSH_ASKPASS_REQUIRE=force
+          export DISPLAY=:0
+          ssh-add ~/.ssh/id_ed25519 </dev/null
+          ssh-add -l -E sha256
+          rm -f ~/.ssh/askpass
+
+      - name: Create release directory
+        # Each release gets a dedicated folder in .deploy/releases; only once a release is fully transferred and verified does it get switched to.
+        env:
+          KRYSTAL_SSH_HOST: ${{ secrets.KRYSTAL_SSH_HOST }}
+          KRYSTAL_SSH_USER: ${{ secrets.KRYSTAL_SSH_USER }}
+          DEPLOY_ID: ${{ github.run_id }}
+        run: |
+          ssh -p 722 \
+            -o MACs=hmac-sha2-256-etm@openssh.com -o Ciphers=aes256-ctr \
+            "$KRYSTAL_SSH_USER@$KRYSTAL_SSH_HOST" \
+            "mkdir -p '/home/theadhoc/theadhocracy-v4/.deploy/releases/$DEPLOY_ID/dist'"
+
+      - name: Upload build and package manifests
+        # Uploads the build output, package manifests, and generated asset list to the release folder. Node modules are installed there before promotion.
+        # The rsync options: -a preserves file details; -z compresses upload; -e configures SSH with private keys; --delete removes any files on the server that are no longer built.
+        env:
+          KRYSTAL_SSH_HOST: ${{ secrets.KRYSTAL_SSH_HOST }}
+          KRYSTAL_SSH_USER: ${{ secrets.KRYSTAL_SSH_USER }}
+          DEPLOY_ID: ${{ github.run_id }}
+        run: |
+          ssh_options="ssh -p 722 -o MACs=hmac-sha2-256-etm@openssh.com -o Ciphers=aes256-ctr"
+          rsync -az --delete -e "$ssh_options" deployment/dist/ \
+            "$KRYSTAL_SSH_USER@$KRYSTAL_SSH_HOST:/home/theadhoc/theadhocracy-v4/.deploy/releases/$DEPLOY_ID/dist/"
+          rsync -az -e "$ssh_options" deployment/package.json deployment/package-lock.json deployment/astro-assets.txt \
+            "$KRYSTAL_SSH_USER@$KRYSTAL_SSH_HOST:/home/theadhoc/theadhocracy-v4/.deploy/releases/$DEPLOY_ID/"
+
+      - name: Promote release, restart app, and prune old releases
+        # 1. Connects to the Node app via SSH
+        # 2. Checks that the new release exists and has a valid Astro start file.
+        # 3. Installs runtime dependencies into the staged release so the live release is not modified before promotion.
+        # 4. Handles an Astro build that is still using the default dist folder, by moving this to a legacy-release folder and then symlinking the new build to dist.
+        # 5. Check the current symlink target for the dist (build) folder; confirm this uses an expected path format (e.g. release-UID).
+        # 6. Copies only assets generated by the previous release, preserving one generation for active browser sessions without accumulating old assets.
+        # 7. Create a new symlink from the new release to the dist folder.
+        # 8. Run the app restart script (triggers cPanel's Passenger to restart the Node app).
+        # 9. Remove any old releases that are not the current or previous release.
+        env:
+          KRYSTAL_SSH_HOST: ${{ secrets.KRYSTAL_SSH_HOST }}
+          KRYSTAL_SSH_USER: ${{ secrets.KRYSTAL_SSH_USER }}
+          DEPLOY_ID: ${{ github.run_id }}
+        run: |
+          ssh -p 722 \
+            -o MACs=hmac-sha2-256-etm@openssh.com -o Ciphers=aes256-ctr \
+            "$KRYSTAL_SSH_USER@$KRYSTAL_SSH_HOST" "DEPLOY_ID=$DEPLOY_ID bash -s" <<'REMOTE'
+          set -eo pipefail
+          source /home/theadhoc/nodevenv/theadhocracy-v4/22/bin/activate
+          set -u
+          cd /home/theadhoc/theadhocracy-v4
+
+          new_release=".deploy/releases/$DEPLOY_ID"
+          if [ ! -f "$new_release/dist/server/entry.mjs" ]; then
+            echo "Staged Astro entry point is missing: $new_release/dist/server/entry.mjs" >&2
+            exit 1
+          fi
+
+          if [ ! -f "$new_release/package.json" ] || [ ! -f "$new_release/package-lock.json" ]; then
+            echo "Staged package manifests are missing from $new_release." >&2
+            exit 1
+          fi
+
+          (cd "$new_release" && npm ci --omit=dev)
+
+          if [ -d dist ] && [ ! -L dist ]; then
+            legacy_release="legacy-$DEPLOY_ID"
+            mkdir -p ".deploy/releases/$legacy_release"
+            mv dist ".deploy/releases/$legacy_release/dist"
+            ln -s ".deploy/releases/$legacy_release/dist" dist
+          elif [ -e dist ] && [ ! -L dist ]; then
+            echo "The app's dist path exists but is not a directory or symlink." >&2
+            exit 1
+          fi
+
+          previous_id=""
+          if [ -L dist ]; then
+            previous_target=$(readlink dist)
+            case "$previous_target" in
+              .deploy/releases/*/dist)
+                previous_id=${previous_target#".deploy/releases/"}
+                previous_id=${previous_id%"/dist"}
+                ;;
+              *)
+                echo "Unexpected dist symlink target: $previous_target" >&2
+                exit 1
+                ;;
+            esac
+          fi
+
+          previous_release=".deploy/releases/$previous_id"
+          if [ -n "$previous_id" ] && [ -d "$previous_release/dist/client/_astro" ]; then
+            if [ -f "$previous_release/astro-assets.txt" ]; then
+              while IFS= read -r asset; do
+                [ -n "$asset" ] || continue
+                source_asset="$previous_release/dist/client/_astro/$asset"
+                [ -f "$source_asset" ] || continue
+                destination_dir="$new_release/dist/client/_astro/$(dirname "$asset")"
+                mkdir -p "$destination_dir"
+                cp -an -- "$source_asset" "$destination_dir/"
+              done < "$previous_release/astro-assets.txt"
+            else
+              # One-time compatibility for releases created before the asset manifest existed.
+              mkdir -p "$new_release/dist/client/_astro"
+              cp -an "$previous_release/dist/client/_astro/." "$new_release/dist/client/_astro/"
+            fi
+          fi
+
+          next_link=".dist-next-$DEPLOY_ID"
+          rm -f "$next_link"
+          ln -s "$new_release/dist" "$next_link"
+          mv -Tf "$next_link" dist
+
+          mkdir -p tmp
+          touch tmp/restart.txt
+
+          for release in .deploy/releases/*; do
+            [ -d "$release" ] || continue
+            release_id=${release##*/}
+            if [ "$release_id" != "$DEPLOY_ID" ] && [ "$release_id" != "$previous_id" ]; then
+              rm -rf -- "$release"
+            fi
+          done
+          REMOTE
