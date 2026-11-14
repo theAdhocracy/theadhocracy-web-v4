@@ -1,0 +1,333 @@
+---
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Global from "@/layouts/Global.astro";
+
+interface Props {
+	title?: string;
+	meta?: {
+		desc?: string;
+		image?: string;
+		type?: string;
+		category?: string;
+		tags?: string;
+		published?: string;
+		updated?: string;
+	};
+}
+
+const { title, meta } = Astro.props;
+---
+
+<Global title={title} meta={meta}>
+	<Header />
+	<slot />
+	<Footer />
+</Global>
+
+<script>
+	// Purpose: Ensure that positioned sidenotes do not overlap the footer, by expanding a spacer element to fill the missing height
+
+	// Extract key DOM nodes
+	const content = document.querySelector(
+		"[data-layout='content']",
+	) as HTMLElement;
+	const spacer = document.querySelector("[data-spacer]") as HTMLElement;
+	const sidenotes = content?.querySelectorAll("[data-sidenote] aside");
+
+	// Set initial state
+	let frame = 0;
+
+	// Function: Update height of spacer element
+	const updateSpacer = () => {
+		// Reset state
+		frame = 0;
+
+		// Find current DOM positioning
+		const spacerStart = spacer.getBoundingClientRect().top;
+		const sidenotesEnd =
+			sidenotes[sidenotes.length - 1].getBoundingClientRect().bottom;
+
+		// Calculate overflow
+		const overflow = sidenotesEnd - spacerStart;
+
+		// Set observer on specific sidenote
+		resizeObserver.observe(sidenotes[sidenotes.length - 1]);
+
+		// Set spacer height
+		const size = `${Math.max(0, overflow)}px`;
+		if (spacer.style.getPropertyValue("--aside-overflow") !== size) {
+			spacer.style.setProperty("--aside-overflow", size);
+		}
+	};
+
+	// Function: Debounce updates & only trigger on existing repaints (basically improves performance and prevents multiple events overlapping)
+	const scheduleUpdate = () => {
+		if (frame) return;
+		frame = requestAnimationFrame(updateSpacer);
+	};
+
+	// Set all of the event watchers (page resize, font loading, DOM mutations, page load etc.)
+	const resizeObserver = new ResizeObserver(scheduleUpdate);
+	resizeObserver.observe(content);
+	new MutationObserver(scheduleUpdate).observe(content, {
+		childList: true,
+		subtree: true,
+	});
+	window.addEventListener("resize", scheduleUpdate, { passive: true });
+	document.fonts.ready.then(scheduleUpdate);
+	scheduleUpdate();
+</script>
+
+<style is:global>
+	main {
+		container-name: content-grid;
+		container-type: inline-size;
+
+		--gutter: 5rem;
+
+		position: relative;
+		inline-size: 100%;
+		max-inline-size: 160ch;
+		margin-inline: auto;
+		padding-block-end: var(--gutter-page);
+		padding-inline: var(--gutter-page);
+
+		/* TODO: Need to balance this out with Table of Contents going to the left and sticky, if possible */
+
+		/* TODO: Also still like having a mild breakout ability in the main flow of content, so perhaps do need to bring back margin/padding controls, or some kind of grid */
+
+		& > article {
+			anchor-name: --content-stream;
+			counter-reset: sidenotes;
+
+			padding-block: clamp(1rem, -0.125rem + 5vw, 3.75rem);
+
+			& > *:has(+ [data-advert]) {
+				anchor-name: --advert;
+			}
+		}
+
+		/* Style Table of Contents */
+		nav:has(#toc-heading) {
+			details summary {
+				h2::after {
+					content: "↕";
+					display: inline-block;
+					margin-inline-start: 1rem;
+					vertical-align: center;
+					font-size: 0.7em;
+				}
+			}
+
+			ol,
+			summary {
+				list-style: none;
+			}
+
+			ol ol {
+				--indent-level: attr(data-level type(<integer>));
+				--indent: calc((var(--indent-level) - 1) * 0.25rem);
+
+				padding-inline-start: var(--indent);
+			}
+		}
+
+		/* Style Sidenotes */
+		[data-sidenote] {
+			aside {
+				display: grid;
+				grid-template-columns: min-content 1fr;
+				gap: 1em;
+				counter-increment: sidenotes;
+
+				padding-inline: 1rem;
+				font-size: 0.8rem;
+				color: var(--colour-text-faded);
+
+				/* Only the footnote marker should go in column 1 */
+				* {
+					grid-column: 2;
+				}
+
+				p {
+					font-size: inherit;
+					color: inherit;
+				}
+			}
+
+			/* Splitting border like this means that multiple stacked footnotes look more cohesive */
+			aside:first-of-type {
+				padding-block-start: 1rem;
+				border-block-start: 1px solid var(--colour-border);
+			}
+
+			aside:last-of-type {
+				padding-block-end: 1rem;
+				border-block-end: 1px solid var(--colour-border);
+			}
+
+			/* Add counter to all sidenotes */
+			aside::before {
+				content: counter(sidenotes);
+				grid-column: 1;
+			}
+
+			/* Give sidenote content the same flow cadence as the main content area */
+			& > * + * {
+				margin-block-start: var(--gap);
+			}
+
+			/* Provide a bit more beathing room after sidenotes; except for multiple stacked sidenotes, have these squish together */
+			& > *:not(aside) + aside {
+				margin-block-start: calc(2 * var(--gap));
+			}
+		}
+
+		/* TODO: Style adverts in general; maybe needs to be a separate component */
+	}
+
+	@container content-grid (width >= 100ch) {
+		/* Restrict content width */
+		article {
+			inline-size: calc(80% - var(--gutter-page) - var(--gutter));
+			max-inline-size: 70ch;
+
+			--grid-content: 2;
+
+			display: grid;
+			grid-template-columns: 2ch 1fr 2ch 28ch;
+			gap: 0 var(--gap, 1rem);
+			max-inline-size: 100%;
+			inline-size: 100%;
+
+			/* Put everything in second column */
+			& > * {
+				grid-column: var(--grid-content);
+			}
+
+			/* Assign breakout elements */
+			blockquote,
+			pre,
+			figure,
+			img,
+			picture,
+			video,
+			iframe,
+			embed {
+				grid-column: calc(var(--grid-content) - 1) /
+					calc(var(--grid-content) + 1);
+			}
+		}
+
+		/* Set column spacer into top-right grid cell; used for sidenotes */
+		[data-column-position] {
+			anchor-name: --column-position;
+
+			grid-row: 1;
+			grid-column: 4;
+			margin: 0;
+		}
+
+		/* Place ToC in sidebar */
+		h1 {
+			anchor-name: --page-heading;
+		}
+
+		nav:has(#toc-heading) {
+			anchor-name: --aside;
+
+			position: absolute;
+			position-anchor: var(--content-stream);
+			inset-block-start: anchor(--page-heading bottom);
+			inset-inline-start: calc(
+				anchor(--content-stream right) + var(--gutter, 0px)
+			);
+			padding-block-end: var(--gap); /* enforce gap */
+
+			inset-inline-start: anchor(--column-position left);
+			inset-inline-end: anchor(--content-stream right);
+
+			/* Add standard heading gap back */
+			& + * {
+				--gap: 2rem;
+			}
+		}
+
+		/* Sidenotes */
+		[data-sidenote] {
+			anchor-scope: --sidenote;
+
+			[data-anchor] {
+				anchor-name: --sidenote;
+			}
+
+			aside {
+				--anchor: --sidenote;
+				--top: anchor(--sidenote top);
+			}
+		}
+
+		/* Adverts */
+		[data-advert] {
+			--anchor: --advert;
+			--top: anchor(--advert top);
+		}
+
+		/* Set sidenotes and adverts to sidebar */
+		aside {
+			anchor-name: --aside;
+
+			position: absolute;
+			position-anchor: var(--anchor);
+			inset-inline-start: calc(
+				anchor(--content-stream right) + var(--gutter, 0px)
+			);
+			inset-block-start: max(
+				calc(anchor(--aside bottom, 0px) + var(--gap, 1em)),
+				var(--top)
+			);
+			inset-inline-end: 0;
+
+			inset-inline-start: anchor(--column-position left);
+			inset-inline-end: anchor(--content-stream right);
+
+			min-inline-size: calc(20% - var(--gutter-page));
+			margin: 0 !important;
+			padding-inline-end: var(--gutter-page);
+		}
+
+		/* Spacer */
+		/* Does not have any height until calculated with JS */
+		[data-spacer] {
+			min-block-size: 0;
+			block-size: calc(var(--aside-overflow, 0px) - var(--gutter-page));
+		}
+	}
+
+	@container content-grid (width >= 130ch) {
+		/* Expand grid layout for ToC */
+		article {
+			--grid-content: 3;
+			grid-template-columns: 28ch 2ch 1fr 2ch 28ch;
+		}
+
+		/* Set column spacer into top-right grid cell; used for sidenotes */
+		[data-column-position] {
+			grid-column: 5;
+		}
+
+		/* Place ToC to left */
+		nav:has(#toc-heading) {
+			anchor-name: unset;
+			--total-rows: attr(
+				data-level-count type(<integer>)
+			); /* calculates no. items */
+
+			position: relative;
+			grid-column: 1;
+			grid-row: 2 / calc(var(--total-rows, 10) + 2); /* adds 2 for offset */
+			padding-inline-start: 2ch;
+		}
+	}
+</style>
