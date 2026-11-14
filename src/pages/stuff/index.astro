@@ -3,6 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import { fetchCraftAPI } from "@/utilities/craft";
 
 const stuffPages = await fetchCraftAPI("api/stuff/pages");
+// TODO: Massively improve this design and consider what actual layout it should use
 ---
 
 <Layout title="Stuff">
