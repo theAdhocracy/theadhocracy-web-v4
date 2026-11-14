@@ -1,0 +1,29 @@
+---
+export const prerender = false;
+
+import ContentGrid from "@/layouts/ContentGrid.astro";
+// import type { GetStaticPaths } from "astro";
+
+import { fetchCraftAPI } from "@/utilities/craft";
+
+// Fetch the page data
+const slug = Astro.url.pathname.replace("/stuff/", "");
+const page = await fetchCraftAPI(`/api/stuff/page/${slug}`);
+
+// If invalid route, send to 404
+if (!page) {
+	return Astro.redirect("/404?origin=stuff");
+}
+// TODO: Consider accessibility of sidenotes. Is there a way to provide a focus hint to a user when they get to the reference?
+---
+
+<ContentGrid title={page.title}>
+	<main>
+		<article data-layout="content">
+			<h1>Stuff {page.title}</h1>
+			<Fragment set:html={page.content} />
+			<div data-spacer></div>
+			<div data-column-position></div>
+		</article>
+	</main>
+</ContentGrid>

@@ -1,0 +1,26 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { fetchCraftAPI } from "@/utilities/craft";
+
+const stuffPages = await fetchCraftAPI("api/stuff/pages");
+---
+
+<Layout title="Stuff">
+	<main id="content">
+		<h1>Explore Stuff</h1>
+		<section>
+			<ul role="list">
+				{
+					stuffPages.map((page: any) => {
+						return (
+							<li>
+								<a href={`/stuff/${page.slug}`}>Stuff {page.title}</a>
+								<Fragment set:html={page.blurb} />
+							</li>
+						);
+					})
+				}
+			</ul>
+		</section>
+	</main>
+</Layout>
