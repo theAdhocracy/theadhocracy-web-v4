@@ -38,6 +38,10 @@ jobs:
         run: echo "PUBLIC_SITE_VERSION=${RELEASE_TAG#release-}" >> "$GITHUB_ENV"
 
       - name: Build Astro app
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          CRAFT_API_KEY: ${{ secrets.CRAFT_API_KEY }}
+          WEBMENTION_API_KEY: ${{ secrets.WEBMENTION_API_KEY }}
         run: npm run build
 
       - name: Record built Astro assets
