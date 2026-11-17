@@ -100,7 +100,7 @@ const sideProjects = [
 ];
 ---
 
-<footer id="footer">
+<footer data-layout="container">
 	<div>
 		<section>
 			<h2>Other Stuff:</h2>
@@ -195,23 +195,19 @@ const sideProjects = [
 </footer>
 
 <style>
-	#footer {
-		grid-area: footer;
-		padding: 2rem 2rem 1rem;
+	footer {
+		grid-area: footer; /* TODO: consider removing once layouts are standardised */
+		padding-block-end: 1rem;
 		background-color: var(--darkgrey);
 		color: var(--pink);
 
 		& > div {
 			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-			gap: 2rem;
-			width: 100%;
-			max-width: 65rem;
-			margin-inline: auto;
+			grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+			gap: 2rem 5rem;
 		}
 
 		section {
-			max-width: 82rem;
 			background: linear-gradient(90deg, var(--orange), var(--pink));
 			-webkit-text-fill-color: transparent;
 			-webkit-background-clip: text;
@@ -249,18 +245,6 @@ const sideProjects = [
 
 		svg {
 			margin-inline-end: 0.2rem;
-		}
-	}
-
-	/* Desktop */
-
-	@media screen and (min-width: 400px) {
-		#footer {
-			padding: 2rem 4rem 1rem;
-
-			& > div {
-				gap: 2rem 5rem;
-			}
 		}
 	}
 </style>

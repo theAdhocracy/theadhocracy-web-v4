@@ -1,7 +1,19 @@
 /* Partially based on Every Layout (https://every-layout.dev/) */
 
 @layer utilities {
-	[data-layout="content"] {
+	/* Container: A default "wrapper" element. Max width to align with generic parts of the site; automated padding for child elements; intended to be full screen. E.g. global site footer */
+	[data-layout*="container"] {
+		padding-block: var(--gap, 32px);
+		padding-inline: clamp(32px, calc(-3.6364px + 5.4545vw), 64px);
+
+		& > * {
+			inline-size: 100%;
+			max-inline-size: 65rem;
+			margin-inline: auto;
+		}
+	}
+
+	[data-layout*="content"] {
 		--gap: 1em;
 
 		max-inline-size: 90ch;
@@ -109,13 +121,13 @@
 		}
 	}
 
-	[data-layout="flex"] {
+	[data-layout*="flex"] {
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--gutter, 1.5rem);
 	}
 
-	[data-layout="grid"] {
+	[data-layout*="grid"] {
 		display: grid;
 		grid-template-columns: repeat(
 			auto-fit,
@@ -124,7 +136,7 @@
 		gap: var(--gutter, 1rem);
 	}
 
-	[data-layout="screenreader"] {
+	[data-layout*="screenreader"] {
 		position: absolute;
 		inline-size: 1px;
 		block-size: 1px;
@@ -136,7 +148,7 @@
 		border: 0;
 	}
 
-	[data-layout="scroll"] {
+	[data-layout*="scroll"] {
 		display: flex;
 		gap: var(--gutter, 1rem);
 		block-size: auto;
@@ -156,7 +168,7 @@
 		}
 	}
 
-	[data-layout="sidebar"] {
+	[data-layout*="sidebar"] {
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--gutter, 0);
@@ -174,7 +186,7 @@
 		}
 	}
 
-	[data-layout="skip-link"]:not(:focus):not(:active):not(:focus-within) {
+	[data-layout*="skip-link"]:not(:focus):not(:active):not(:focus-within) {
 		inline-size: 1px;
 		block-size: 1px;
 		overflow: hidden;
@@ -184,7 +196,7 @@
 		white-space: nowrap;
 	}
 
-	[data-layout="stack"] {
+	[data-layout*="stack"] {
 		display: flex;
 		flex-direction: column;
 		gap: var(--gutter, 1.5rem);
@@ -194,7 +206,7 @@
 		}
 	}
 
-	[data-layout="switcher"] {
+	[data-layout*="switcher"] {
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--gutter, 1rem);

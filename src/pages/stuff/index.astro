@@ -1,0 +1,91 @@
+---
+import Default from "@/layouts/Default.astro";
+import { fetchCraftAPI } from "@/utilities/craft";
+
+const stuffPages = await fetchCraftAPI("api/stuff/pages");
+// TODO: Massively improve this design and consider what actual layout it should use
+---
+
+<Default title="Stuff">
+	<main data-layout="container stack">
+		<header data-layout="stack">
+			<h1>Just A Bunch of Stuff</h1>
+			<p>Not quite articles, too personal for notes, this is all of the <em>stuff</em> that doesn't quite fit anywhere else. Evergreen lists that capture my personal thoughts and experiences, updated in a distinctly ad hoc way. (And some of them double as <a href="https://slashpages.net/">slash pages</a>.)</p>
+			<hr>
+		</header>
+		<section data-layout="stack">
+			<ul role="list" data-layout="stack">
+				{
+					stuffPages.map((page: any) => {
+						return (
+							<li>
+								<a href={`/stuff/${page.slug}`}>Stuff {page.title}</a>
+								<Fragment set:html={page.blurb} />
+							</li>
+						);
+					})
+				}
+			</ul>
+		</section>
+	</main>
+</Default>
+
+<style>
+	main {
+		--colour-accent: var(--pink);
+		margin-block-end: 32px;
+
+		/* Page header */
+		header {
+			max-inline-size: 50rem;
+			margin-block-end: 32px;
+			place-content: center;
+			place-items: center;
+			text-align: center;
+
+			h1 {
+				color: var(--colour-accent);
+			}
+
+			p {
+				text-wrap: balance;
+			}
+
+			hr {
+				--gutter-override: 0.75rem;
+
+				inline-size: 25ch;
+				max-inline-size: 100%;
+				border: 1px solid var(--colour-accent);
+				color: var(--colour-accent);
+			}
+		}
+
+		/* Page content */
+		& > section {
+			max-inline-size: 85ch;
+
+			ul {
+				a {
+					display: block;
+					margin-block-end: 0.25em;
+					font-weight: bold;
+				}
+			}
+		}
+
+		/* TODO: Make this a global setting */
+		a {
+			color: var(--colour-accent);
+			text-underline-offset: 0.1em;
+			text-decoration-thickness: 0.1em;
+		}
+
+		a:hover,
+		a:focus-visible {
+			text-underline-offset: 0.25em;
+		}
+	}
+
+	
+</style>
