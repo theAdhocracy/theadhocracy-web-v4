@@ -1,6 +1,18 @@
 /* Partially based on Every Layout (https://every-layout.dev/) */
 
 @layer utilities {
+	/* Container: A default "wrapper" element. Max width to align with generic parts of the site; automated padding for child elements; intended to be full screen. E.g. global site footer */
+	[data-layout="container"] {
+		padding-block: var(--gap, 32px);
+		padding-inline: clamp(32px, calc(-3.6364px + 5.4545vw), 64px);
+
+		& > * {
+			inline-size: 100%;
+			max-inline-size: 65rem;
+			margin-inline: auto;
+		}
+	}
+
 	[data-layout="content"] {
 		--gap: 1em;
 
