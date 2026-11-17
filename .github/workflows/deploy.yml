@@ -148,7 +148,7 @@ jobs:
             -o MACs=hmac-sha2-256-etm@openssh.com -o Ciphers=aes256-ctr \
             "$KRYSTAL_SSH_USER@$KRYSTAL_SSH_HOST" "DEPLOY_ID=$DEPLOY_ID bash -s" <<'REMOTE'
           set -eo pipefail
-          source /home/theadhoc/nodevenv/theadhocracy-v4/22/bin/activate
+          source /home/theadhoc/nodevenv/theadhocracy-v4/20/bin/activate
           set -u
           cd /home/theadhoc/theadhocracy-v4
 
