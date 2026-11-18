@@ -63,10 +63,9 @@ const readType = result?.contentType?.substring(
 				</p>
 				<ul class="flat-list">
 					{post.categories.map((category: string) => (
-						<li>
+						<li class="card-button card-tag">
 							<a
-								href={`/search/?query=&filter=categories:${category.replaceAll(" ", "_").replaceAll("&", "_amp_")}&page=0`}
-								class="card-button card-tag"
+								href={`/search?query=&filter=categories:${category.replaceAll(" ", "_").replaceAll("&", "_amp_")}&page=0`}
 							>
 								{category}
 							</a>
