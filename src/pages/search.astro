@@ -230,15 +230,15 @@ const powerSources = [
 								<Fragment set:html={result.snippet} />
 								<footer>
 									<dl>
-										<span>
+										<div>
 											<dt>Published:</dt>
 											<dd>
 												<time datetime={result.date.html}>
 													{result.date.date}
 												</time>
 											</dd>
-										</span>
-										<span>
+										</div>
+										<div>
 											<dt>Categories:</dt>
 											<dd>
 												<ul role="list">
@@ -253,8 +253,8 @@ const powerSources = [
 													})}
 												</ul>
 											</dd>
-										</span>
-										<span>
+										</div>
+										<div>
 											<dt>Tags:</dt>
 											<dd>
 												<ul role="list">
@@ -269,7 +269,7 @@ const powerSources = [
 													})}
 												</ul>
 											</dd>
-										</span>
+										</div>
 									</dl>
 								</footer>
 							</article>
@@ -526,7 +526,7 @@ const powerSources = [
 
 			dl,
 			ul,
-			dl > span {
+			dl > div {
 				display: flex;
 				flex-wrap: wrap;
 				list-style: none;
@@ -569,7 +569,7 @@ const powerSources = [
 				}
 			}
 
-			dl > span {
+			dl > div {
 				gap: 0 0.25rem;
 				flex-wrap: nowrap;
 			}

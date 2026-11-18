@@ -63,12 +63,13 @@ const readType = result?.contentType?.substring(
 				</p>
 				<ul class="flat-list">
 					{post.categories.map((category: string) => (
-						<a
-							href={`/search/?query=&filter=categories:${category.replaceAll(" ", "_").replaceAll("&", "_amp_")}&page=0`}
-							class="card-button card-tag"
-						>
-							<li>{category}</li>
-						</a>
+						<li class="card-button card-tag">
+							<a
+								href={`/search?query=&filter=categories:${category.replaceAll(" ", "_").replaceAll("&", "_amp_")}&page=0`}
+							>
+								{category}
+							</a>
+						</li>
 					))}
 				</ul>
 			</footer>
@@ -147,62 +148,17 @@ const readType = result?.contentType?.substring(
 						</p>
 						<ul class="flat-list">
 							{groups.map((group: any) => (
-								<a
-									href={`/review/${group.url}/${group.slug}`}
-									class="card-button card-tag"
-								>
-									<li>{group.title}</li>
-								</a>
+								<li class="card-button card-tag">
+									<a
+										href={`/review/${group.url}/${group.slug}`}
+									>
+										{group.title}
+									</a>
+								</li>
 							))}
 						</ul>
 					</>
 				)}
-			</footer>
-		</article>
-	)
-}
-
-{
-	type === "search" && (
-		<article class="content-card">
-			<h2>
-				<SearchHighlight
-					original={result.title}
-					matched={result._highlightResult.title}
-				/>
-			</h2>
-			<p>
-				<SearchHighlight
-					original={result.sanitised}
-					matched={result._highlightResult.sanitised}
-				/>
-			</p>
-			<footer>
-				<a href={`/${url}/${result.slug}`} class="card-button">
-					<span role="img" aria-label="Book icon">
-						📖
-					</span>{" "}
-					Read {readType}
-				</a>
-				<p class="card-button card-info">
-					<span role="img" title="Date published" aria-label="Date published">
-						📆
-					</span>{" "}
-					{result.month.slice(0, 3)}&nbsp;{result.year}
-				</p>
-				<p class="card-divider">
-					<span>Categories</span>
-				</p>
-				<ul class="flat-list">
-					{result.categories.map((category: any) => (
-						<a
-							href={`/search/?query=&filter=categories:${category.replaceAll(" ", "_").replaceAll("&", "_amp_")}&page=0`}
-							class="card-button card-tag"
-						>
-							<li>{category}</li>
-						</a>
-					))}
-				</ul>
 			</footer>
 		</article>
 	)
@@ -293,6 +249,12 @@ const readType = result?.contentType?.substring(
 		white-space: nowrap;
 		text-decoration: none;
 		color: #ffffff;
+		cursor: pointer;
+
+		a {
+			color: #ffffff;
+			text-decoration: none;
+		}
 	}
 
 	.card-button.card-tag {
@@ -313,7 +275,7 @@ const readType = result?.contentType?.substring(
 		background-color: var(--lightblue);
 	}
 
-	.content-card a.card-button:hover {
+	.content-card .card-button:is(:hover, :focus-within) {
 		background-color: var(--yellow);
 	}
 </style>

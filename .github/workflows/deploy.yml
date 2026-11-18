@@ -24,7 +24,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.22.3
+          node-version: 22.23.5
           cache: npm
 
       - name: Install build dependencies
@@ -148,7 +148,7 @@ jobs:
             -o MACs=hmac-sha2-256-etm@openssh.com -o Ciphers=aes256-ctr \
             "$KRYSTAL_SSH_USER@$KRYSTAL_SSH_HOST" "DEPLOY_ID=$DEPLOY_ID bash -s" <<'REMOTE'
           set -eo pipefail
-          source /home/theadhoc/nodevenv/theadhocracy-v4/20/bin/activate
+          source /home/theadhoc/nodevenv/theadhocracy-v4/22/bin/activate
           set -u
           cd /home/theadhoc/theadhocracy-v4
 

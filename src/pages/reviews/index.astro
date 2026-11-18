@@ -256,20 +256,20 @@ if (Astro.request.method === "POST") {
 								<Fragment set:html={result.snippet} />
 								<footer>
 									<dl>
-										<span>
+										<div>
 											<dt>Rating:</dt>
 											<dd>{rating}</dd>
-										</span>
-										<span>
+										</div>
+										<div>
 											<dt>Reviewed:</dt>
 											<dd>
 												<time datetime={result.date.html}>
 													{result.date.date}
 												</time>
 											</dd>
-										</span>
+										</div>
 										{result.series.length > 0 && (
-											<span>
+											<div>
 												<dt>Series:</dt>
 												<dd>
 													<ul role="list">
@@ -286,10 +286,10 @@ if (Astro.request.method === "POST") {
 														})}
 													</ul>
 												</dd>
-											</span>
+											</div>
 										)}
 										{result.collections.length > 0 && (
-											<span>
+											<div>
 												<dt>Collections:</dt>
 												<dd>
 													<ul role="list">
@@ -306,7 +306,7 @@ if (Astro.request.method === "POST") {
 														})}
 													</ul>
 												</dd>
-											</span>
+											</div>
 										)}
 									</dl>
 								</footer>
@@ -646,7 +646,7 @@ if (Astro.request.method === "POST") {
 
 			dl,
 			ul,
-			dl > span {
+			dl > div {
 				display: flex;
 				flex-wrap: wrap;
 				list-style: none;
@@ -685,7 +685,7 @@ if (Astro.request.method === "POST") {
 				}
 			}
 
-			dl > span {
+			dl > div {
 				gap: 0 0.25rem;
 				flex-wrap: nowrap;
 			}
