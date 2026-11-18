@@ -107,38 +107,38 @@ const webmentions =
 				</h1>
 				<aside class="details">
 					<dl>
-						<span>
+						<div>
 							<dt>Original Author:</dt>
 							<dd>
 								{note.attribution}
 								<a class="callout" href={note.source}>Read Original Article ↬</a
 								>
 							</dd>
-						</span>
+						</div>
 
 						{
 							note.updated?.date !== note.date.date && (
-								<span>
+								<div>
 									<dt>Updated:</dt>
 									<dd>
 										<time class="dt-updated" datetime={note.updated.html}>
 											{note.updated.date}
 										</time>
 									</dd>
-								</span>
+								</div>
 							)
 						}
-						<span>
+						<div>
 							<dt>Published:</dt>
 							<dd>
 								<time class="dt-published" datetime={note.date.html}>
 									{note.date.date}
 								</time>
 							</dd>
-						</span>
+						</div>
 						{
 							note.categories.length === 1 && (
-								<span>
+								<div>
 									<dt>Category:</dt>
 									<dd>
 										{note.categories.map((category: string) => (
@@ -150,12 +150,12 @@ const webmentions =
 											</a>
 										))}
 									</dd>
-								</span>
+								</div>
 							)
 						}
 						{
 							note.categories.length > 1 && (
-								<span>
+								<div>
 									<dt>Categories:</dt>
 									<dd>
 										<ul role="list">
@@ -171,10 +171,10 @@ const webmentions =
 											))}
 										</ul>
 									</dd>
-								</span>
+								</div>
 							)
 						}
-						<span>
+						<div>
 							<dt>Tags:</dt>
 							<dd>
 								<ul role="list">
@@ -189,7 +189,7 @@ const webmentions =
 									}
 								</ul>
 							</dd>
-						</span>
+						</div>
 					</dl>
 				</aside>
 			</header>
@@ -319,7 +319,7 @@ const webmentions =
 			flex-wrap: wrap;
 			gap: 0 1rem;
 
-			span {
+			div {
 				display: flex;
 				gap: 0.15rem;
 				align-items: center;
@@ -419,7 +419,7 @@ const webmentions =
 	}
 
 	/* Make the "original author" line full width */
-	dl span:has(.callout) {
+	dl div:has(.callout) {
 		flex-basis: 100%;
 	}
 </style>
