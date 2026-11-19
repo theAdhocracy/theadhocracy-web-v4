@@ -14,6 +14,7 @@ const stuffPages = await fetchCraftAPI("api/stuff/pages");
 			<hr>
 		</header>
 		<section data-layout="stack">
+			<h2>General</h2>
 			<ul role="list" data-layout="stack">
 				{
 					stuffPages.map((page: any) => {
@@ -30,15 +31,27 @@ const stuffPages = await fetchCraftAPI("api/stuff/pages");
 	</main>
 </Default>
 
+<!-- TODO: work out a better way to handle this -->
+<style is:global>
+	body {
+		background-color: var(--colour-bg);
+	}
+</style>
+
 <style>
 	main {
 		--colour-accent: var(--pink);
-		margin-block-end: 32px;
+		--content-max-size: 50rem;
+
+		padding-block-end: 0;
 
 		/* Page header */
 		header {
-			max-inline-size: 50rem;
+			max-inline-size: var(--content-max-size);
 			margin-block-end: 32px;
+			padding-block: 32px;
+			background-color: #fff;
+			border-radius: 5px;
 			place-content: center;
 			place-items: center;
 			text-align: center;
@@ -63,7 +76,15 @@ const stuffPages = await fetchCraftAPI("api/stuff/pages");
 
 		/* Page content */
 		& > section {
-			max-inline-size: 85ch;
+			max-inline-size: var(--content-max-size);
+			padding: 32px;
+			padding-block-end: 48px;
+			background-color: #fff;
+			border-radius: 5px 5px 0 0;
+
+			h2 {
+				color: #909090;
+			}
 
 			ul {
 				a {
